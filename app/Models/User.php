@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'phone',
+        'date_of_birth',
     ];
 
     /**
@@ -39,7 +42,48 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'phone';
+    }
+
+    public function getPhone()
+    {
+        $phone = str_split($this->phone);
+        $output = '';
+
+        foreach ($phone as $number) {
+            //            if ($number === '+') $output .= '+';
+
+            if (strlen($output) > 3) {
+                $output .= $number;
+            } else {
+                $output .= ' ';
+            }
+        }
+
+        return $output;
+    }
+
+    public function phone_number()
+    {
+        return $this->hasMany(PhoneNumber::class);
+    }
+    public static function search($search)
+{
+    return empty($search) ? static::query()
+        : static::query()
+            ->where('id', 'like', '%' . $search . '%')
+            ->orWhere('first_name', 'like', '%' . $search . '%')
+            ->orWhere('last_name', 'like', '%' . $search . '%');
+}
 }

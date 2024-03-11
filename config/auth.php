@@ -40,8 +40,17 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-    ],
 
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+        ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins', // You may need to define a provider for admins
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -64,6 +73,12 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class, // Replace with your actual Admin model class
+        ],
+
 
         // 'users' => [
         //     'driver' => 'database',
