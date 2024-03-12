@@ -1,44 +1,47 @@
 @extends('dashbored')
 
 @section('inner_content')
-<div>
+<div class="card">
+    <style>
+        th {
+            font-size: 12px;
+            white-space: nowrap;
+            border: 1px solid gray;
+        }
 
-  <div class="card">
+        td {
+            font-size: 12px;
+            white-space: nowrap;
+        }
+    </style>
     <div class="card-body">
-      <h5 class="card-title">Users</h5>
-      <livewire:users-table>
-        <!-- Table with stripped rows -->
-        {{-- <table class="table datatable">
-          <thead>
-            <tr>
-              <th scope="col">id</th>
-              <th scope="col">Full Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Phone Number</th>
-              <th scope="col">Date of Birth</th>
+        <h5 class="card-title">On Hold Transaction</h5>
+        {{-- <livewire:on-hold> --}}
 
-            </tr>
-          </thead>
-          <tbody>
-            @if (count($users) > 0)
-            @foreach ($users as $user)
-            <tr>
-              <th scope=" row"><a href="/user/{{ $user->id }}">{{ $loop->iteration }}</a></th>
-              <td>{{ $user->first_name." ". $user->last_name }}</td>
-              <td>{{ $user->email }}</td>
-              <td>{{ $user->phone }}</td>
-              <td style="width: 200px;">{{ $user->date_of_birth }}</td>
-
-            </tr>
-            @endforeach
-            @else
-            <td colspan="8" class="text-center">No users found.</td>
-            @endif
-          </tbody>
-        </table> --}}
-        <!-- End Table with stripped rows -->
-
+            <div class="table-responsive">
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($users as $user)
+                        <tr>
+                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->first_name . " " . $user->last_name }}</td>
+                            <td>{{ $user->phone }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->created_at->diffForHumans() }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
     </div>
-  </div>
 </div>
 @endsection

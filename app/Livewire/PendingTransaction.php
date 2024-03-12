@@ -2,17 +2,51 @@
 
 namespace App\Livewire;
 
+use App\Models\Sbank;
 use App\Models\Transaction;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class PendingTransaction extends Component
 {
+    use WithPagination;
+
+    public $filterTransactionId;
+    public $filterStatus;
+    public $filterReceiverBankId;
+    public $filterSenderBankId;
+    public $perPage = 10;
+
+    
     public function render()
     {
-        // Fetch transactions with status 'OnHold'
-        $transactions = Transaction::where('status', 'OnHold')->get();
+        $banks = Sbank::get();
+        $transactions = Transaction::query()
+            ->when($this->filterTransactionId, function ($query) {
+                $query->where('transaction_id', 'like', '%' . $this->filterTransactionId . '%');
+            })
+            ->when($this->filterStatus, function ($query) {
+                $query->where('status', $this->filterStatus);
+            })
+            ->when($this->filterReceiverBankId, function ($query) {
+                $query->where('receiver_sb_id', $this->filterReceiverBankId);
+            })
+            ->when($this->filterSenderBankId, function ($query) {
+                $query->where('send_sb_id', $this->filterSenderBankId);
+            })
+            ->simplePaginate($this->perPage);
 
-        // Pass the transactions to the Livewire view
-        return view('livewire.pending-transaction', ['transactions' => $transactions]);
+        return view('livewire.pending-transaction', ['transactions' => $transactions,'banks'=>$banks ]);
+    }
+
+    public function applyFilters()
+    {
+        $this->resetPage(); // Reset pagination when applying filters
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['filterTransactionId', 'filterStatus', 'filterReceiverBankId', 'filterSenderBankId']);
+        $this->resetPage(); // Reset pagination when resetting filters
     }
 }

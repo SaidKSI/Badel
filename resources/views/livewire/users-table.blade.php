@@ -17,14 +17,7 @@
                 <option value="0">Descending</option>
             </select>
         </div>
-        <div class="col-md-2">
-            <select wire:model="perPage" class="form-control">
-                <option>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-            </select>
-        </div>
+
         <div class="col-md-1">
             <button wire:click="applyFilter" class="btn btn-primary">Search</button>
         </div>
@@ -52,5 +45,13 @@
             @endforeach
         </tbody>
     </table>
-    {!! $users->links() !!}
+    <div class="d-flex gap-3">{!! $users->links() !!}<div class="col-md-1">
+            <select wire:model="perPage" class="form-control">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+            </select>
+        </div>
+    </div>
 </div>

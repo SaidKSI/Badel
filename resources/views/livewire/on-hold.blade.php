@@ -13,37 +13,12 @@
 <div class="container">
     <div class="row pb-4">
         <div class="col-md-3">
-            <input wire:model.debounce.300ms="filterTransactionId" type="text" class="form-control"
-                placeholder="Transaction ID">
+            <input wire:model.debounce.300ms="search" type="text" name="search" class="form-control" placeholder="Transaction ID">
         </div>
-        <div class="col-md-3">
-            <select wire:model="filterStatus" class="form-control">
-                <option value="">Select Transaction Status</option>
-                <option value="OnHold">OnHold</option>
-                <option value="Terminated">Terminated</option>
-                <option value="Canceled">Cancelled</option>
-                <!-- Add more receiver bank options as needed -->
-            </select>
-        </div>
-        <div class="col-md-3">
-            <select wire:model="filterReceiverBankId" class="form-control">
-                <option value="">Select Receiver Bank</option>
-                @foreach($banks as $bank)
-                <option value="{{ $bank->id }}">{{ $bank->Sb_name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-3">
-            <select wire:model="filterSenderBankId" class="form-control">
-                <option value="">Select Sender Bank</option>
-                @foreach($banks as $bank)
-                <option value="{{ $bank->id }}">{{ $bank->Sb_name }}</option>
-                @endforeach
-            </select>
-        </div>
+        <!-- ... Other filter inputs ... -->
         <div class="d-flex m-2 mr-5">
             <div class="col-md-2">
-                <button wire:click="applyFilters" class="btn btn-primary">Apply Filters</button>
+                <button wire:click="applyFilter" class="btn btn-primary">Apply Filters</button>
             </div>
             <div class="col-md-2">
                 <button wire:click="resetFilters" class="btn btn-secondary">Reset Filters</button>
@@ -57,8 +32,6 @@
                 <th>Username</th>
                 <th>Bedel ID</th>
                 <th>Balance</th>
-                {{-- <th>Amount after tax</th>
-                <th>Amount</th> --}}
                 <th>Sender Phone</th>
                 <th>Phone Receiver</th>
                 <th>Receiver Bank</th>
@@ -72,8 +45,6 @@
             <tr>
                 <td>{{ $transaction->user->first_name . " " . $transaction->user->last_name }}</td>
                 <td>{{ $transaction->transaction_id }}</td>
-                {{-- <td class="text-danger">{{ $transaction->amount_after_tax }}</td>
-                <td class="text-success">{{ $transaction->amount }}</td> --}}
                 @php
                 $balance = $transaction->amount - $transaction->amount_after_tax
                 @endphp
@@ -93,5 +64,15 @@
             @endforeach
         </tbody>
     </table>
-    {!! $transactions->links() !!}
+    <div class="d-flex gap-3">{!! $transactions->links() !!}<div class="col-sm-1">
+            <select wire:model="perPage" class="form-control">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+            </select>
+        </div>
+    </div>
+
+
 </div>

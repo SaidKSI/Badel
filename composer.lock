@@ -4,8 +4,69 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ba83b104ebb6c0ebb295530e0cb49e5",
+    "content-hash": "291146b347f77667cab9e4353141dc01",
     "packages": [
+        {
+            "name": "asvae/laravel-api-tester",
+            "version": "2.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/asvae/laravel-api-tester.git",
+                "reference": "54a8e2dd9de990b1725defc56ec30cc14f39b95a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/asvae/laravel-api-tester/zipball/54a8e2dd9de990b1725defc56ec30cc14f39b95a",
+                "reference": "54a8e2dd9de990b1725defc56ec30cc14f39b95a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "laravel/framework": "5.2.*",
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "firebase/token-generator": "Token generator for firebase",
+                "ktamas77/firebase-php": "Keep your requests stored in cloud"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Asvae\\ApiTester\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Asvae\\ApiTester\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yauheni Prakopchyk",
+                    "email": "ontrew@gmail.com"
+                }
+            ],
+            "description": "Api tester for Laravel Framework",
+            "keywords": [
+                "api",
+                "debug",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/asvae/laravel-api-tester/issues",
+                "source": "https://github.com/asvae/laravel-api-tester/tree/2.0.11"
+            },
+            "time": "2020-09-19T16:01:57+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.11.0",

@@ -9,7 +9,7 @@
 		</li>
 		<li class="nav-heading">Pages</li>
 		<li class="nav-item">
-			<a class="nav-link collapsed" href="/admin/transactions/hold">
+			<a class="nav-link collapsed" href="{{route('pending')}}">
 				<i class="bi bi-clock-fill"></i>
 				<span>Pending Transaction</span>
 			</a>
@@ -21,7 +21,13 @@
 			</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link collapsed" href="/admin/transactions/cancelled">
+			<a class="nav-link collapsed" href="/admin/transactions/onhold">
+				<i class="bi bi-clock-fill"></i>
+				<span>On Hold Transaction</span>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link collapsed" href="/admin/transactions/Canceled">
 				<i class="bx bxs-hand"></i>
 				<span>Cancelled Transaction</span>
 			</a>
@@ -31,6 +37,12 @@
 			<a class="nav-link collapsed" href="/admin/banks">
 				<i class="bi bi-bank"></i>
 				<span>Banks</span>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link collapsed" href="/admin/fees">
+				<i class="bi bi-currency-exchange"></i>
+				<span>Fees</span>
 			</a>
 		</li>
 		<li class="nav-item">

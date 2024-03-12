@@ -23,7 +23,9 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'date_of_birth',
+        'country_code',
+        'uuid',
+        'date_of_birth'
     ];
 
     /**
@@ -79,11 +81,11 @@ class User extends Authenticatable
         return $this->hasMany(PhoneNumber::class);
     }
     public static function search($search)
-{
-    return empty($search) ? static::query()
-        : static::query()
+    {
+        return empty($search) ? static::query()
+            : static::query()
             ->where('id', 'like', '%' . $search . '%')
             ->orWhere('first_name', 'like', '%' . $search . '%')
             ->orWhere('last_name', 'like', '%' . $search . '%');
-}
+    }
 }

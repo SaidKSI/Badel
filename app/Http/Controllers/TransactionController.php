@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
     public function index($status)
     {
         $view = '';
 
         switch ($status) {
-            case 'hold':
+            case 'pending':
                 $view = 'transaction.pending';
                 break;
 
@@ -23,8 +26,12 @@ class TransactionController extends Controller
                 $view = 'transaction.terminat';
                 break;
 
-            case 'cancelled':
+            case 'Canceled':
                 $view = 'transaction.cancel';
+                break;
+
+            case 'onhold':
+                $view = 'transaction.onhold';
                 break;
 
             default:
@@ -32,9 +39,30 @@ class TransactionController extends Controller
                 break;
         }
 
-        $transactions = Transaction::where('status', $status)->get();
+        $transactions = Transaction::with(['user', 'sendBank', 'receiverBank'])
+            ->where('status', $status)
+            ->whereNull('deleted_at')
+            ->get();
+
 
         return view($view, ['transactions' => $transactions, 'status' => $status]);
+    }
+
+    public function updateStatus($id, $status)
+    {
+        // Find the transaction
+        $transaction = Transaction::findOrFail($id);
+
+        if (!$transaction) {
+            return redirect()->route('transactions')->with(['error' => 'Transaction not found'], 404);
+        }
+
+        // Update the transaction status
+        $transaction->status = $status;
+        $transaction->save();
+        return back()->with(['message' => 'Transaction updated successfully', 'data' => $transaction]);
+
+        // return redirect()->route('transactions', ['status' => $status])->with(['message' => 'Transaction updated successfully', 'data' => $transaction]);
     }
 
     /**
@@ -72,10 +100,7 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaction $transaction)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.

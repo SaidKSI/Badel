@@ -31,22 +31,30 @@ class Transaction extends Model
          'transaction_time'
     ];
 
-      public function User(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
-      }
+    }
 
-      public function Sbank(){
+    public function sendBank()
+    {
         return $this->belongsTo(Sbank::class, 'send_sb_id', 'id');
+    }
 
-      }
-
-      public function Plateform_reciever(){
+    public function receiverBank()
+    {
         return $this->belongsTo(Sbank::class, 'receiver_sb_id', 'id');
-
-      }
+    }
 
     public function getTransactionTime()
     {
         return Carbon::parse($this->created_at)->format('d-m-Y h:i:sa');
+    }
+    public static function search($search)
+    {
+        return empty($search) ? static::query()
+            : static::query()
+                // ->where('id', 'like', '%' . $search . '%')
+                ->Where('transaction_id', 'like', '%' . $search . '%');
     }
 }

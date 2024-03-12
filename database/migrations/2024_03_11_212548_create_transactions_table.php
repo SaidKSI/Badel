@@ -27,13 +27,14 @@ return new class extends Migration
             $table->decimal('amount_after_tax', 8, 2);
             $table->string('transaction_id');
             $table->string('bedel_id')->nullable();
+            $table->time('transaction_time')->nullable();
             $table->time('read_at')->nullable();
+            $table->dateTime('terminated_at')->nullable();
 
             $table->string('supervisor_id')->nullable();
             $table->tinyText('status');
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 

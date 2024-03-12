@@ -2,7 +2,18 @@
 
 @section('inner_content')
 <div>
+  <style>
+    th {
+      font-size: 12px;
+      white-space: nowrap;
+      border: 1px solid gray;
+    }
 
+    td {
+      font-size: 12px;
+      white-space: nowrap;
+    }
+  </style>
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Banks</h5>

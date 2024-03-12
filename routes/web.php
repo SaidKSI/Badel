@@ -27,6 +27,16 @@ Route::prefix('admin')->group(function () {
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::get('/banks', [BankController::class, 'index'])->name('banks');
     Route::get('/users', [DashboredController::class, 'users'])->name('users');
-     // Transaction
-     Route::get('/transactions/{status}', [TransactionController::class, 'index'])->name('transactions');
+    // Transaction
+    Route::get('/transactions/{status}', [TransactionController::class, 'index'])->name('transactions');
+    Route::get('/transactions/pending', [TransactionController::class, 'pending'])->name('pending');
+
+    // UPDATE TRANSACTION STAUTS
+    Route::patch('/transactions/update/{id}/{status}', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+
+
+    //FEES
+
+    Route::get('/fees', [DashboredController::class, 'fees'])->name('fees');
+    Route::patch('/fees/{id}', [DashboredController::class, 'fees_update'])->name('fees_update');
 });
