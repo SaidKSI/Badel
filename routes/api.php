@@ -52,9 +52,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     route::get('v1/list-order/{order}/{start_date?}/{end_date?}', [OrderController::class, 'orders'])->name('order.list');
     route::get('v1/order/{id}', [OrderController::class, 'singleOrder'])->name('order.single');
+
+    //PHONE NUMBERS
+
+Route::post('/phone-numbers', [PhoneNumberController::class, 'store']);
+
 });
 
 
 
-Route::post('/phone-numbers', [PhoneNumberController::class, 'store']);
-Route::get('/test', [PhoneNumberController::class, 'index']);

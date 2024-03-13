@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PhoneNumber;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PhoneNumberController extends Controller
@@ -13,72 +14,38 @@ class PhoneNumberController extends Controller
      */
     public function index()
     {
-        return 'hello';
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         // Validate the request data
         $request->validate([
-            'phone_number' => 'required|unique:users',
+            'phone_number' => 'required|unique:phone_numbers',
             'user_id' => 'required|exists:users,id',
             // Add any other validation rules you need
         ]);
+
+        // Check if the phone number is already verified
+        if (User::where('phone', $request->phone_number)->exists()) {
+            return response()->json(['error' => 'Phone number already exists and is verified'], 400);
+        }
+
+        // Check if the user exists
+        if (!User::find($request->user_id)) {
+            return response()->json(['error' => 'User does not exist'], 400);
+        }
 
         // Create a new PhoneNumber with 'OnHold' status
         $phoneNumber = PhoneNumber::create([
             'phone_number' => $request->input('phone_number'),
             'user_id' => $request->input('user_id'),
-            'status' => 'OnHold',
+            'status' => 'pending',
         ]);
 
-        // You can customize the response format as needed
+        // Return a success response
         return response()->json([
             'message' => 'PhoneNumber created successfully',
             'data' => $phoneNumber,
         ], 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(PhoneNumber $phoneNumber)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PhoneNumber $phoneNumber)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PhoneNumber $phoneNumber)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PhoneNumber $phoneNumber)
-    {
-        //
     }
 }
