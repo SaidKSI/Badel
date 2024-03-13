@@ -50,11 +50,5 @@ class Transaction extends Model
     {
         return Carbon::parse($this->created_at)->format('d-m-Y h:i:sa');
     }
-    public static function search($search)
-    {
-        return empty($search) ? static::query()
-            : static::query()
-                // ->where('id', 'like', '%' . $search . '%')
-                ->Where('transaction_id', 'like', '%' . $search . '%');
-    }
+   
 }

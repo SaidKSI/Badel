@@ -23,6 +23,7 @@
         <thead>
           <tr>
             <th scope="col">id</th>
+            <th scope="col">IMG</th>
             <th scope="col">Bank Name</th>
             <th scope="col">Send Account</th>
             <th scope="col">can send</th>

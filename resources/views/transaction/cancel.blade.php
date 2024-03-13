@@ -15,8 +15,10 @@
     }
   </style>
   <div class="card-body">
-    <h5 class="card-title">Terminated Transaction</h5>
-    {{-- <livewire:on-hold> --}}
+    <h5 class="card-title">Cancelled Transaction |{{$date_difference}}</h5>
+
+    <livewire:transaction-date-filter>
+
 
       <div class="table-responsive">
         <table class="table datatable">
@@ -25,8 +27,11 @@
               <th>Username</th>
               <th>Bedel ID</th>
               <th>Balance</th>
+              <th>Sender</th>
+              <th>Receiver</th>
               <th>Sender Phone</th>
               <th>Phone Receiver</th>
+              <th>Sender Bank</th>
               <th>Receiver Bank</th>
               <th>Transaction time</th>
               <th>Action</th>
@@ -50,11 +55,18 @@
                   <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"></i>
                 </button>
               </td>
-              <td>{{ $transaction->receiver_phone }}</td>
               <td>{{ $transaction->send_full_name }}</td>
+              <td>{{ $transaction->receiver_full_name }}</td>
+              <td>{{ $transaction->send_phone }}</td>
+              <td>{{ $transaction->receiver_phone }}</td>
+              <td>{{ $transaction->sendBank->Sb_name }}</td>
               <td>{{ $transaction->receiverBank->Sb_name }}</td>
               <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
-              <td>Action</td>
+              <td>
+                <span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>
+                  Cancelled</span> <small>at {{ $transaction->updated_at->format('Y-m-d H:i')}}
+                </small>
+              </td>
             </tr>
             @endforeach
             @else

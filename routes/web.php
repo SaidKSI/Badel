@@ -39,4 +39,7 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     Route::get('/fees', [DashboredController::class, 'fees'])->name('fees');
     Route::patch('/fees/{id}', [DashboredController::class, 'fees_update'])->name('fees_update');
+
+    // HISTORY
+    Route::get('/history', [DashboredController::class, 'history'])->name('history');
 });

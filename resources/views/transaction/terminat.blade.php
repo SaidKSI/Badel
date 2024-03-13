@@ -7,6 +7,7 @@
       font-size: 12px;
       white-space: nowrap;
       border: 1px solid gray;
+
     }
 
     td {
@@ -15,8 +16,10 @@
     }
   </style>
   <div class="card-body">
-    <h5 class="card-title">Terminated Transaction</h5>
-    {{-- <livewire:on-hold> --}}
+    <h5 class="card-title">Terminated Transaction </h5>
+
+    <livewire:transaction-date-filter>
+
 
       <div class="table-responsive">
         <table class="table datatable">
@@ -25,11 +28,14 @@
               <th>Username</th>
               <th>Bedel ID</th>
               <th>Balance</th>
+              <th>Sender</th>
+              <th>Receiver</th>
               <th>Sender Phone</th>
               <th>Phone Receiver</th>
+              <th>Sender Bank</th>
               <th>Receiver Bank</th>
               <th>Transaction time</th>
-              <th>Action</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -50,50 +56,17 @@
                   <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"></i>
                 </button>
               </td>
-              <td>{{ $transaction->receiver_phone }}</td>
               <td>{{ $transaction->send_full_name }}</td>
+              <td>{{ $transaction->receiver_full_name }}</td>
+              <td>{{ $transaction->send_phone }}</td>
+              <td>{{ $transaction->receiver_phone }}</td>
+              <td>{{ $transaction->sendBank->Sb_name }}</td>
               <td>{{ $transaction->receiverBank->Sb_name }}</td>
               <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
-              <td>
-                <div class="d-flex">
-                  <form
-                    action="
-                    {{ route('transactions.updateStatus', ['id' => $transaction->id, 'status' => 'terminated']) }}
-                    "
-                    method="POST" onsubmit="return confirm('Are you sure you want to terminate this transaction?');">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="btn btn-success me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Terminate">
-                      <i class="bi bi-check-circle"></i>
-                    </button>
-                  </form>
-  
-                  <form
-                    action="
-                    {{ route('transactions.updateStatus', ['id' => $transaction->id, 'status' => 'cancelled']) }}
-                    "
-                    method="POST" onsubmit="return confirm('Are you sure you want to cancel this transaction?');">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="btn btn-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Cancel">
-                      <i class="bi bi-exclamation-octagon"></i>
-                    </button>
-                  </form>
-  
-                  <form action="
-                  {{ route('transactions.updateStatus', ['id' => $transaction->id, 'status' => 'hold']) }}
-                  "
-                    method="POST" onsubmit="return confirm('Are you sure you want to put this transaction on hold?');">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Hold">
-                      <i class="bx bxs-hand"></i>
-                    </button>
-                  </form>
-                </div>
+              <td >
+                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>
+                  Terminated</span> <small>at {{ $transaction->updated_at->format('Y-m-d H:i')}}
+              </small>
               </td>
             </tr>
             @endforeach

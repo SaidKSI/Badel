@@ -32,7 +32,7 @@ return new class extends Migration
             $table->dateTime('terminated_at')->nullable();
 
             $table->string('supervisor_id')->nullable();
-            $table->tinyText('status');
+            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
         });

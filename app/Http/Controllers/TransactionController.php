@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +14,7 @@ class TransactionController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index($status)
+    public function index(Request $request, $status)
     {
         $view = '';
 
@@ -39,14 +40,29 @@ class TransactionController extends Controller
                 break;
         }
 
+        $startDate = $request->input('start_date', Carbon::now()->subDays(30)->format('Y-m-d'));
+        $endDate = $request->input('end_date', Carbon::now()->addDay()->format('Y-m-d'));
+
+
+        // Calculate the difference in days between the start and end dates
+        $dateDifference = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
+
         $transactions = Transaction::with(['user', 'sendBank', 'receiverBank'])
             ->where('status', $status)
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
             ->get();
 
-
-        return view($view, ['transactions' => $transactions, 'status' => $status]);
+        return view($view, [
+            'transactions' => $transactions,
+            'status' => $status,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'date_difference' => $dateDifference, // Pass the date difference to the view
+        ]);
     }
+
 
     public function updateStatus($id, $status)
     {
