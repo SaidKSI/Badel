@@ -31,11 +31,12 @@
           @if (count($phones) > 0)
           @foreach ($phones as $phone)
           <tr>
-            <td>{{ $phone->user->first_name . " " . $phone->user->last_name }}</td>
+            <td><a href="{{route('user',['id'=>$phone->user_id])}}">{{ $phone->user->first_name . " " .
+                $phone->user->last_name }}</a></td>
             <td>{{ $phone->phone_number }}</td>
             <td>{{ $phone->created_at->format('Y-m-d H:i') }}</td>
             <td>
-                <span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>
+              <span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>
                 Cancelled</span><small>at {{ $phone->updated_at->format('Y-m-d H:i')}}
               </small>
             </td>

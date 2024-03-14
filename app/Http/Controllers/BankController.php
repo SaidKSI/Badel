@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sbank;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,24 @@ class BankController extends Controller
         $banks = Sbank::get();
 
         return view('bank.index', ['banks' => $banks]);
+    }
+    public function show($id)
+    {
+
+        $bank = Sbank::findOrFail($id);
+        $transactionCount = Transaction::where('send_sb_id', $bank->id)
+            ->orWhere('receiver_sb_id', $bank->id)
+            ->whereNull('deleted_at')
+            ->count();
+
+        $totalAmount = Transaction::where('send_sb_id', $id)->whereNull('deleted_at')->sum('amount');
+        $totalAmountAfterTax = Transaction::where('send_sb_id', $id)->whereNull('deleted_at')->sum('amount_after_tax');
+        $transactions = Transaction::with(['user', 'sendBank', 'receiverBank'])
+        ->where('send_sb_id', $bank->id)
+        ->orWhere('receiver_sb_id', $bank->id)
+        ->whereNull('deleted_at')
+        ->get();
+        return view('bank.show', compact('bank', 'totalAmount', 'totalAmountAfterTax', 'transactionCount','transactions'));
     }
     public function banks_update(Request $request, $id)
     {

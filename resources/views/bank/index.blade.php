@@ -35,7 +35,7 @@
           @if (count($banks) > 0)
           @foreach ($banks as $bank)
           <tr>
-            <th scope="row"><a href="/bank/{{ $bank->id }}">{{ $loop->iteration }}</a></th>
+            <th scope="row"><a href="{{route('bank',['id'=>$bank->id])}}">{{ $bank->id}}</a></th>
             <td>
               <img src="{{ asset($bank->profile_picture) }}" alt="Bank Image" style="width: 50px; height: auto;">
             </td>
@@ -84,17 +84,16 @@
                         <div class="row mb-3">
                           <label for="inputMax" class="col-sm-2 col-form-label">Can Send</label>
                           <div class="col-sm-10">
-                            <input type="number"  class="form-control" value="{{ $bank->can_send }}"
-                              name="can_send" min="0" max="1" step="1" pattern="[0-1]"
-                              title="Please enter either 0 or 1">
+                            <input type="number" class="form-control" value="{{ $bank->can_send }}" name="can_send"
+                              min="0" max="1" step="1" pattern="[0-1]" title="Please enter either 0 or 1">
                           </div>
                         </div>
                         <div class="row mb-3">
                           <label for="inputMax" class="col-sm-2 col-form-label">Can Receive</label>
                           <div class="col-sm-10">
-                            <input type="number" class="form-control"
-                              value="{{ $bank->can_receive }}" name="can_receive" min="0" max="1" step="1"
-                              pattern="[0-1]" title="Please enter either 0 or 1">
+                            <input type="number" class="form-control" value="{{ $bank->can_receive }}"
+                              name="can_receive" min="0" max="1" step="1" pattern="[0-1]"
+                              title="Please enter either 0 or 1">
                           </div>
                         </div>
 

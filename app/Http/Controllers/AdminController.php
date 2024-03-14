@@ -22,14 +22,14 @@ class AdminController extends Controller
             'email' => ['required', 'email'],
             'password' => 'required'
         ]);
-        // dd($request);
         if (auth()->guard('admin')->attempt($formFields)) {
             $request->session()->regenerate();
-            return redirect()->route('banks');
+            return redirect()->route('dashbored');
         }
 
         return back()->withErrors(['email' => 'Invalid credentials'])->withInput($request->only('email'));
     }
+
     public function index()
     {
         //

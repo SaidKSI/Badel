@@ -41,8 +41,11 @@
             @if (count($transactions) > 0)
             @foreach ($transactions as $transaction)
             <tr>
-              <td>{{ $transaction->user->first_name . " " . $transaction->user->last_name }}</td>
-              <td>{{ $transaction->transaction_id }}</td>
+              <td><a href="{{route('user',['id'=>$transaction->user_id])}}">{{ $transaction->user->first_name . " " .
+                  $transaction->user->last_name }}</a></td>
+              <td><a href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
+                  $transaction->transaction_id }}</a></td>
+
               @php
               $balance = $transaction->amount - $transaction->amount_after_tax
               @endphp
@@ -80,11 +83,6 @@
   </div>
 </div>
 
-<script>
-  function showTooltip(element) {
-        var tooltip = new bootstrap.Tooltip(element);
-        tooltip.show();
-    }
-</script>
+
 
 @endsection

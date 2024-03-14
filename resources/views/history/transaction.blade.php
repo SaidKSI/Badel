@@ -15,7 +15,7 @@
         }
     </style>
     <div class="card-body">
-        <h5 class="card-title">Transaction History |{{$dateDifference}}</h5>
+        <h5 class="card-title">Transaction History |{{$dateDifference}} Days</h5>
         {{-- <livewire:on-hold> --}}
             <form action="">
                 <div class="row pb-4">
@@ -77,7 +77,9 @@
                         @if (count($transactions) > 0)
                         @foreach ($transactions as $transaction)
                         <tr>
-                            <td>{{ $transaction->user->first_name . " " . $transaction->user->last_name }}</td>
+                            <td><a href="{{route('user',['id'=>$transaction->user_id])}}">{{
+                                    $transaction->user->first_name . " " .
+                                    $transaction->user->last_name }}</a></td>
                             <td>{{ $transaction->transaction_id }}</td>
                             @php
                             $balance = $transaction->amount - $transaction->amount_after_tax
@@ -123,11 +125,6 @@
     </div>
 </div>
 
-<script>
-    function showTooltip(element) {
-        var tooltip = new bootstrap.Tooltip(element);
-        tooltip.show();
-    }
-</script>
+
 
 @endsection

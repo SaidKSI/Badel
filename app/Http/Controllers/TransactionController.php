@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sbank;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -81,12 +82,49 @@ class TransactionController extends Controller
         // return redirect()->route('transactions', ['status' => $status])->with(['message' => 'Transaction updated successfully', 'data' => $transaction]);
     }
 
+    public function show($transaction_id)
+    {
+        $banks = Sbank::get();
+        $transaction = Transaction::with(['user', 'sendBank', 'receiverBank'])->where("transaction_id", $transaction_id)->firstOrFail();
+        // dd($transaction);
+        return view('transaction.show', ['transaction' => $transaction, 'banks' => $banks]);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function update(Request $request, $id)
     {
-        //
+        // Validate the request data
+        $request->validate([
+            'send_sb_id' => 'required',
+            'amount' => 'required',
+            'amount_after_tax' => 'required',
+            'transaction_id' => 'required',
+            'send_phone' => 'required',
+            'status' => 'required',
+            'receiver_sb_id' => 'required',
+            'receiver_phone' => 'required',
+        ]);
+
+        // Find the transaction
+        $transaction = Transaction::findOrFail($id);
+
+        // Update the transaction with the form data
+        $transaction->update([
+            'send_sb_id' => $request->send_sb_id,
+            'amount' => $request->amount,
+            'amount_after_tax' => $request->amount_after_tax,
+            'transaction_id' => $request->transaction_id,
+            'send_phone' => $request->send_phone,
+            'status' => $request->status,
+            'receiver_sb_id' => $request->receiver_sb_id,
+            'receiver_phone' => $request->receiver_phone,
+        ]);
+
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Transaction updated successfully');
     }
 
     /**
@@ -100,10 +138,6 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.

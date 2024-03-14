@@ -42,7 +42,8 @@
             @if (count($transactions) > 0)
             @foreach ($transactions as $transaction)
             <tr>
-              <td>{{ $transaction->user->first_name . " " . $transaction->user->last_name }}</td>
+              <td><a href="{{route('user',['id'=>$transaction->user_id])}}">{{ $transaction->user->first_name . " " .
+                  $transaction->user->last_name }}</a></td>
               <td>{{ $transaction->transaction_id }}</td>
               @php
               $balance = $transaction->amount - $transaction->amount_after_tax
@@ -63,10 +64,10 @@
               <td>{{ $transaction->sendBank->Sb_name }}</td>
               <td>{{ $transaction->receiverBank->Sb_name }}</td>
               <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
-              <td >
+              <td>
                 <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>
                   Terminated</span> <small>at {{ $transaction->updated_at->format('Y-m-d H:i')}}
-              </small>
+                </small>
               </td>
             </tr>
             @endforeach
@@ -81,11 +82,6 @@
   </div>
 </div>
 
-<script>
-  function showTooltip(element) {
-        var tooltip = new bootstrap.Tooltip(element);
-        tooltip.show();
-    }
-</script>
+
 
 @endsection

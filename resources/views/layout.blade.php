@@ -69,6 +69,12 @@
 
 	<!-- Template Main JS File -->
 	<script src="{{asset('assets/js/main.js')}}"></script>
+	<script>
+    function showTooltip(element) {
+        var tooltip = new bootstrap.Tooltip(element);
+        tooltip.show();
+    }
+</script>
 </body>
 
 </html>
