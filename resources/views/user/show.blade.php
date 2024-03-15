@@ -119,7 +119,7 @@
                                         @if ($user->transaction && count($user->transaction) > 0)
                                         @foreach ($user->transaction as $transaction)
                                         <tr>
-                                            <a
+                                           <td> <a
                                                 href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
                                                 $transaction->transaction_id }}</a></td>
                                             @php

@@ -3,23 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\enum\OrderStatus;
-use App\Http\Controllers\Api\CommonService;
 use App\Http\Controllers\Controller;
-use App\Jobs\ProcessImage;
+use App\Models\Admin;
 use App\Models\fees;
 use App\Models\Sbank;
 use App\Models\Transaction;
 
 use App\Models\User;
-use App\Notifications\transactionnotification;
-use Illuminate\Http\JsonResponse;
+use App\Notifications\notifications;
+use App\Notifications\TransactionNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Ladumor\OneSignal\OneSignal;
 
 class TransactionController extends Controller
 {
@@ -51,7 +46,7 @@ class TransactionController extends Controller
         }
 
         $check_Transaction = Transaction::where('transaction_id', $request->transaction_id)->exists();
-        if($check_Transaction) {
+        if ($check_Transaction) {
             return response()->json([
                 'status' => false,
                 'message' => "Transaction ID already existed",
@@ -86,13 +81,16 @@ class TransactionController extends Controller
         $transaction->amount_after_tax = $amount_after_fee;
         $transaction->transaction_id = $request->transaction_id;
         $transaction->bedel_id = '';
-        $transaction->read_at=null;
+        $transaction->read_at = null;
         $transaction->status = OrderStatus::Pending;
 
 
         $transaction->save();
 
-
+        $admins = Admin::get();
+        foreach ($admins as $admin) {
+            $admin->notify(new notifications($transaction));
+        }
         return response()->json([
             'status' => true,
             'message' => 'Success',
@@ -100,7 +98,6 @@ class TransactionController extends Controller
                 "transaction" => $transaction->only(['id', 'send_sb_id', 'receiver_sb_id', 'send_full_name', 'send_phone', 'receiver_full_name', 'receiver_phone', 'amount', 'amount_after_tax', 'transaction_id', 'status', 'created_at']),
             )
         ]);
-
     }
 
 
@@ -166,8 +163,8 @@ class TransactionController extends Controller
 
     public function restore(Request $request)
     {
-        $prevstatus=Transaction::where('id', $request->status)->value('status');
-        $transactionId=Transaction::where('id', $request->status)->value('id');
+        $prevstatus = Transaction::where('id', $request->status)->value('status');
+        $transactionId = Transaction::where('id', $request->status)->value('id');
         $userId = Transaction::where('id', $transactionId)->value('user_id');
         $user = User::find($userId)->first();
 
@@ -180,13 +177,13 @@ class TransactionController extends Controller
                     'deleted_at' => NULL,
                 ]
             );
-        $actualstatus=Transaction::where('id', $request->status)->value('status');
+        $actualstatus = Transaction::where('id', $request->status)->value('status');
 
-        $user->notify(new transactionnotification($userId,$prevstatus,$actualstatus,$transactionId));
+        $user->notify(new TransactionNotification($userId, $prevstatus, $actualstatus, $transactionId));
 
 
         $restore = "The transaction has been restored ";
-            session()->flash('restore', $restore);
+        session()->flash('restore', $restore);
         return back();
     }
 
@@ -199,24 +196,22 @@ class TransactionController extends Controller
 
     public function confirmTransaction()
     {
-
-
     }
 
     public function hold(Request $request)
     {
-        $prevstatus=Transaction::where('id', $request->status)->value('status');
-        $transactionId=Transaction::where('id', $request->status)->value('id');
+        $prevstatus = Transaction::where('id', $request->status)->value('status');
+        $transactionId = Transaction::where('id', $request->status)->value('id');
         $userId = Transaction::where('id', $transactionId)->value('user_id');
         $user = User::find($userId)->first();
 
 
         Transaction::where('id', $transactionId)
             ->update(['status' => "OnHold"]);
-            $hold = "The transaction has been permanently placed on hold ";
-            session()->flash('hold', $hold);
-            $actualstatus=Transaction::where('id', $request->status)->value('status');
-            $user->notify(new transactionnotification($userId,$prevstatus,$actualstatus,$transactionId));
+        $hold = "The transaction has been permanently placed on hold ";
+        session()->flash('hold', $hold);
+        $actualstatus = Transaction::where('id', $request->status)->value('status');
+        $user->notify(new TransactionNotification($userId, $prevstatus, $actualstatus, $transactionId));
 
         return back();
     }
@@ -228,7 +223,6 @@ class TransactionController extends Controller
             $data = $request->all();
 
             $searchTerm = $data['query'];
-
         }
         $user = Auth::guard('admin')->user();
 
@@ -244,7 +238,6 @@ class TransactionController extends Controller
             $data = $request->all();
 
             $searchTerm = $data['query'];
-
         }
         $user = Auth::guard('admin')->user();
 
@@ -262,7 +255,6 @@ class TransactionController extends Controller
             $data = $request->all();
 
             $searchTerm = $data['query'];
-
         }
         $user = Auth::guard('admin')->user();
 
@@ -295,7 +287,6 @@ class TransactionController extends Controller
             $data = $request->all();
 
             $searchTerm = $data['query'];
-
         }
         $user = Auth::guard('admin')->user();
 
@@ -308,7 +299,6 @@ class TransactionController extends Controller
         // $historique_transaction = Transaction::with(['User','Sbank'])->withTrashed()->where('transaction_id', 'LIKE', "%$searchTerm%")->paginate(8);
         // $mergedCollection = $collection1->merge($collection2);
         return view('Dashboard.historique_transaction_list', ["user" => $user, "historique_transactions" => $historique_transactions])->render();
-
     }
 
     // public function delete(Request $request)
@@ -326,7 +316,7 @@ class TransactionController extends Controller
     //     $actualstatus=Transaction::where('id', $transactionId)->withTrashed()->value('status');
     //     $userId = Transaction::where('id', $transactionId)->withTrashed()->value('user_id');
     //     $user = User::find($userId)->first();
-    //     $user->notify(new transactionnotification($userId,$prevstatus,$actualstatus,$transactionId));
+    //     $user->notify(new TransactionNotification($userId,$prevstatus,$actualstatus,$transactionId));
     //     // ->update(['status' => "pending"]);
     //     $cancel = "The transaction has been definitively canceled ";
     //     session()->flash('cancel', $cancel);
@@ -335,4 +325,3 @@ class TransactionController extends Controller
 
     // }
 }
-

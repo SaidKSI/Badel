@@ -48,18 +48,26 @@ class TransactionController extends Controller
         // Calculate the difference in days between the start and end dates
         $dateDifference = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
 
-        $transactions = Transaction::with(['user', 'sendBank', 'receiverBank'])
+        $transactions = Transaction::with([
+            'user:id,first_name,last_name',
+            'sendBank:id,Sb_name',
+            'receiverBank:id,Sb_name'
+        ])
             ->where('status', $status)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
             ->get();
+        $transactionCount = $transactions->count();
+        $banks = Sbank::get();
         return view($view, [
             'transactions' => $transactions,
             'status' => $status,
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'date_difference' => $dateDifference, // Pass the date difference to the view
+            'date_difference' => $dateDifference,
+            'transactionCount' => $transactionCount,
+            'banks' => $banks
         ]);
     }
 
@@ -84,7 +92,11 @@ class TransactionController extends Controller
     public function show($transaction_id)
     {
         $banks = Sbank::get();
-        $transaction = Transaction::with(['user', 'sendBank', 'receiverBank'])->where("transaction_id", $transaction_id)->firstOrFail();
+        $transaction = Transaction::with([
+            'user:id,first_name,last_name',
+            'sendBank:id,Sb_name',
+            'receiverBank:id,Sb_name'
+        ])->where("transaction_id", $transaction_id)->firstOrFail();
         // dd($transaction);
         return view('transaction.show', ['transaction' => $transaction, 'banks' => $banks]);
     }

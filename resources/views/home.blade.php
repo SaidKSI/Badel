@@ -9,7 +9,8 @@
         <div class="col-xxl-4 col-md-3">
             <div class="card info-card sales-card">
                 <div class="card-body">
-                    <h5 class="card-title"> <a href="{{route('bank',['id'=>$bank->id])}}">  {{ $bank->Sb_name }} </a> </h5>
+                    <h5 class="card-title"> <a href="{{route('bank',['id'=>$bank->id])}}"> {{ $bank->Sb_name }} </a>
+                    </h5>
 
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -43,6 +44,110 @@
         </div>
         @endforeach
     </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body pb-0">
+                    <h5 class="card-title">Transaction Status</h5>
 
+                    <div id="transactionChart" style="min-height: 400px;" class="echart"></div>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#transactionChart")).setOption({
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{a} <br/>{b}: {c} ({d}%)'
+                        },
+                        legend: {
+                            top: '5%',
+                            left: 'center'
+                        },
+                        series: [{
+                            name: 'Transaction Status',
+                            type: 'pie',
+                            radius: ['40%', '70%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: '18',
+                                    fontWeight: 'bold'
+                                }
+                            },
+                            labelLine: {
+                                show: false
+                            },
+                            data: [
+                                { value: {{ $holdTransactionCount }}, name: 'Hold' },
+                                { value: {{ $cancelledTransactionCount }}, name: 'Cancelled' },
+                                { value: {{ $pendingTransactionCount }}, name: 'Pending' },
+                                { value: {{ $terminatedTransactionCount }}, name: 'Terminated' }
+                            ]
+                        }]
+                    });
+                });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body pb-0">
+                    <h5 class="card-title">Transaction Status</h5>
+
+                    <div id="PhoneChart" style="min-height: 400px;" class="echart"></div>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#PhoneChart")).setOption({
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{a} <br/>{b}: {c} ({d}%)'
+                        },
+                        legend: {
+                            top: '5%',
+                            left: 'center'
+                        },
+                        series: [{
+                            name: 'Phone Status',
+                            type: 'pie',
+                            radius: ['40%', '70%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: '18',
+                                    fontWeight: 'bold'
+                                }
+                            },
+                            labelLine: {
+                                show: false
+                            },
+                            data: [
+                                { value: {{ $holdPhoneCount }}, name: 'Hold' },
+                                { value: {{ $cancelledPhoneCount }}, name: 'Cancelled' },
+                                { value: {{ $pendingPhoneCount }}, name: 'Pending' },
+                                { value: {{ $terminatedPhoneCount }}, name: 'Terminated' }
+                            ]
+                        }]
+                    });
+                });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 @endsection

@@ -32,7 +32,7 @@ class PhoneNumberController extends Controller
                 // You can handle other cases or set a default view here
                 break;
         }
-        $phones = PhoneNumber::with(['user'])
+        $phones = PhoneNumber::with(['user:id,first_name,last_name'])
             ->where('status', $status)
             ->orderBy('created_at', 'desc')
             ->get();

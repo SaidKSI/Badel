@@ -25,11 +25,10 @@ Route::get('/', function () {
 Route::prefix('admin')->group(function () {
     Route::get('login', [AdminController::class, 'show_login'])->name('login');
     Route::post('admin_login', [AdminController::class, 'login'])->name('admin_login');
-    // Route::get('/logout', AdminController::class, 'logout')->name('logout');
 });
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     // Log Out
-
+    Route::get('/logout', [AdminController::class, 'logout'])->name('logout');
     // HISTORY
     Route::get('/transaction/history', [DashboredController::class, 'transaction_history'])->name('transaction.history');
     Route::get('/phone/history', [DashboredController::class, 'phone_history'])->name('phone.history');
@@ -64,4 +63,7 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     //PHONE NUMBERS
     Route::get('/phones/{status}', [PhoneNumberController::class, 'index'])->name('phones');
     Route::patch('/phones/update/{id}/{status}', [PhoneNumberController::class, 'updateStatus'])->name('phones.updateStatus');
+
+    //NOTIFICATION
+    
 });

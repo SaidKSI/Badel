@@ -39,7 +39,7 @@
 			<ul id="transaction" class="nav-content collapse " data-bs-parent="#sidebar-nav">
 				<li>
 					<a href="/admin/transactions/pending">
-						<i class="bi bi-clock-fill"></i><span>Pending Transaction</span>
+						<i class="bi bi-clock-fill"></i><span>Pending Transaction </span>
 					</a>
 				</li>
 				<li>

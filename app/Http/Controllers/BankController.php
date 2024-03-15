@@ -26,12 +26,16 @@ class BankController extends Controller
 
         $totalAmount = Transaction::where('send_sb_id', $id)->whereNull('deleted_at')->sum('amount');
         $totalAmountAfterTax = Transaction::where('send_sb_id', $id)->whereNull('deleted_at')->sum('amount_after_tax');
-        $transactions = Transaction::with(['user', 'sendBank', 'receiverBank'])
-        ->where('send_sb_id', $bank->id)
-        ->orWhere('receiver_sb_id', $bank->id)
-        ->whereNull('deleted_at')
-        ->get();
-        return view('bank.show', compact('bank', 'totalAmount', 'totalAmountAfterTax', 'transactionCount','transactions'));
+        $transactions = Transaction::with([
+            'user:id,first_name,last_name',
+            'sendBank:id,Sb_name',
+            'receiverBank:id,Sb_name'
+        ])
+            ->where('send_sb_id', $bank->id)
+            ->orWhere('receiver_sb_id', $bank->id)
+            ->whereNull('deleted_at')
+            ->get();
+        return view('bank.show', compact('bank', 'totalAmount', 'totalAmountAfterTax', 'transactionCount', 'transactions'));
     }
     public function banks_update(Request $request, $id)
     {

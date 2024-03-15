@@ -4,19 +4,24 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
+use App\Models\User; // Assuming Admin model is User model
 
 class notifications extends Notification
 {
     use Queueable;
 
+    protected $transaction;
+
     /**
      * Create a new notification instance.
+     *
+     * @param mixed $transaction
      */
-    public function __construct()
+    public function __construct($transaction)
     {
-        //
+        $this->transaction = $transaction;
     }
 
     /**
@@ -24,20 +29,9 @@ class notifications extends Notification
      *
      * @return array<int, string>
      */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
-        return ['mail'];
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return ['database']; // Notify via database notification
     }
 
     /**
@@ -45,10 +39,12 @@ class notifications extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toDatabase($notifiable)
     {
         return [
-            //
+            'transaction_id' => $this->transaction->id,
+            'amount' => $this->transaction->amount,
+            'message' => 'New transaction created: ' . $this->transaction->id,
         ];
     }
 }

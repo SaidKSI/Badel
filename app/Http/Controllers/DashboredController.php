@@ -17,25 +17,35 @@ class DashboredController extends Controller
     {
         // Get the list of banks
         $banks = Sbank::get();
-    
+
         // Initialize an empty array to store the totals for each bank
         $bankTotals = [];
-    
+
+        $holdTransactionCount = Transaction::where('status', 'OnHold')->count();
+        $cancelledTransactionCount = Transaction::where('status', 'Canceled')->count();
+        $pendingTransactionCount = Transaction::where('status', 'Pending')->count();
+        $terminatedTransactionCount = Transaction::where('status', 'Terminated')->count();
+
+
+        $holdPhoneCount = PhoneNumber::where('status', 'OnHold')->count();
+        $cancelledPhoneCount = PhoneNumber::where('status', 'Canceled')->count();
+        $pendingPhoneCount = PhoneNumber::where('status', 'Pending')->count();
+        $terminatedPhoneCount = PhoneNumber::where('status', 'Terminated')->count();
         // Loop through each bank
         foreach ($banks as $bank) {
             // Calculate the sum of amount and amount_after_tax for transactions of this bank
             $totalAmount = Transaction::where('send_sb_id', $bank->id)->whereNull('deleted_at')->sum('amount');
             $totalAmountAfterTax = Transaction::where('send_sb_id', $bank->id)->whereNull('deleted_at')->sum('amount_after_tax');
-    
+
             // Store the calculated totals in an array
             $bankTotals[$bank->Sb_name] = [
                 'totalAmount' => $totalAmount,
                 'totalAmountAfterTax' => $totalAmountAfterTax,
             ];
         }
-    // dd($bankTotals);
+        // dd($bankTotals);
         // Pass the calculated totals and the list of banks to the view
-        return view('home', compact('bankTotals', 'banks'));
+        return view('home', compact('bankTotals', 'banks', 'holdTransactionCount', 'cancelledTransactionCount', 'pendingTransactionCount', 'terminatedTransactionCount', 'holdPhoneCount', 'cancelledPhoneCount', 'pendingPhoneCount', 'terminatedPhoneCount'));
     }
     public function users()
     {
@@ -78,10 +88,15 @@ class DashboredController extends Controller
 
         $status = $request->input('status');
 
-        $transactions = Transaction::with(['user', 'sendBank', 'receiverBank'])
+        $transactions = Transaction::with([
+            'user:id,first_name,last_name',
+            'sendBank:id,Sb_name',
+            'receiverBank:id,Sb_name'
+        ])
             ->whereNull('deleted_at')
             ->whereBetween('created_at', [$startDate, $endDate]);
 
+        // Apply status filter
         if ($status && in_array($status, ['terminated', 'canceled'])) {
             $transactions->where('status', $status);
         } else {
@@ -89,15 +104,20 @@ class DashboredController extends Controller
             $transactions->whereIn('status', ['terminated', 'canceled']);
         }
 
-        $transactions = $transactions->orderBy('created_at', 'desc')->get();
+        $transactionCount = $transactions->count();
 
+        $transactions = $transactions->get();
+        $banks = Sbank::get();
         return view('history.transaction', [
             'transactions' => $transactions,
+            'transactionCount' => $transactionCount,
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'dateDifference' => $dateDifference
+            'dateDifference' => $dateDifference,
+            'banks' => $banks
         ]);
     }
+
     public function phone_history(Request $request)
     {
         $startDate = $request->input('start_date', Carbon::now()->subDays(30)->format('Y-m-d'));
@@ -108,7 +128,7 @@ class DashboredController extends Controller
 
         $status = $request->input('status');
 
-        $phones = PhoneNumber::with(['user'])
+        $phones = PhoneNumber::with(['user:id,first_name,last_name'])
             ->whereBetween('created_at', [$startDate, $endDate]);
 
         if ($status && in_array($status, ['terminated', 'canceled'])) {
