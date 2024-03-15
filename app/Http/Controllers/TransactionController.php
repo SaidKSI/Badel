@@ -54,7 +54,6 @@ class TransactionController extends Controller
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
             ->get();
-
         return view($view, [
             'transactions' => $transactions,
             'status' => $status,

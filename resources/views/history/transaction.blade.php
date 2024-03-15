@@ -80,7 +80,8 @@
                             <td><a href="{{route('user',['id'=>$transaction->user_id])}}">{{
                                     $transaction->user->first_name . " " .
                                     $transaction->user->last_name }}</a></td>
-                            <td>{{ $transaction->transaction_id }}</td>
+                            <a href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
+                                $transaction->transaction_id }}</a></td>
                             @php
                             $balance = $transaction->amount - $transaction->amount_after_tax
                             @endphp

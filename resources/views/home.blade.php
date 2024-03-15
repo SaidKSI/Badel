@@ -9,7 +9,7 @@
         <div class="col-xxl-4 col-md-3">
             <div class="card info-card sales-card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ $bank->Sb_name }}</h5>
+                    <h5 class="card-title"> <a href="{{route('bank',['id'=>$bank->id])}}">  {{ $bank->Sb_name }} </a> </h5>
 
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">

@@ -63,8 +63,8 @@
                             Charts</button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab"
-                            data-bs-target="#profile-settings">Recent Activity</button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Recent
+                            Activity</button>
                     </li>
 
                 </ul>
@@ -92,7 +92,9 @@
                                     @if ($transactions && count($transactions) > 0)
                                     @foreach ($transactions as $transaction)
                                     <tr>
-                                        <td>{{ $transaction->transaction_id }}</td>
+                                        <td><a
+                                                href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
+                                                $transaction->transaction_id }}</a></td>
                                         @php
                                         $balance = $transaction->amount - $transaction->amount_after_tax
                                         @endphp
@@ -227,19 +229,33 @@
                                     <tr>
                                         <th>IN or OUT</th>
                                         <th>Bedel ID</th>
-                                        <th>balance</th>
-                                        <th>status</th>
-                                        
+                                        <th>Balance</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if ($transactions && count($transactions) > 0)
                                     @foreach ($transactions as $transaction)
                                     <tr>
-                                        <td>In Or Out</td>
-                                        <td>{{ $transaction->transaction_id }}</td>
+                                        <td>
+                                            @if ($transaction->send_sb_id == $bank->id)
+                                            <i class="bi bi-arrow-left-square-fill"></i> <span class="text-danger"
+                                                style="font-size: 12px">OUT</span>
+                                            @elseif ($transaction->receiver_sb_id == $bank->id)
+                                            <i class="bi bi-arrow-right-square-fill"></i> <span class="text-success"
+                                                style="font-size: 15px">IN</span>
+                                            @else
+                                            Unknown
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a
+                                                href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">
+                                                {{ $transaction->transaction_id }}
+                                            </a>
+                                        </td>
                                         @php
-                                        $balance = $transaction->amount - $transaction->amount_after_tax
+                                        $balance = $transaction->amount - $transaction->amount_after_tax;
                                         @endphp
                                         <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
                                             {{ $balance }}
@@ -252,48 +268,44 @@
                                             </button>
                                         </td>
                                         <td>
-                                            @if($transaction->status == 'Terminated')
-                                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>
-                                                Terminated</span> <small>at {{
-                                                $transaction->updated_at->format('Y-m-d
-                                                H:i')}}
-                                            </small>
-                                            @elseif($transaction->status == 'Canceled')
-                                            <span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>
-                                                Cancelled</span> <small>at {{
-                                                $transaction->updated_at->format('Y-m-d
-                                                H:i')}}
-                                            </small>
-                                            @elseif($transaction->status == 'OnHold')
-                                            <span class="badge bg-warning text-dark"><i
-                                                    class="bi bi-exclamation-triangle me-1"></i> OnHold</span>
-                                            <small>at {{
-                                                $transaction->updated_at->format('Y-m-d
-                                                H:i')}}
-                                            </small>
-                                            @elseif($transaction->status == 'Pending')
-                                            <span class="badge bg-dark"><i class="bi bi-folder me-1"></i>
-                                                Pending</span>
-                                            <small>at {{
-                                                $transaction->updated_at->format('Y-m-d
-                                                H:i')}}
-                                            </small>
+                                            @if ($transaction->status == 'Terminated')
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Terminated
+                                            </span>
+                                            <small>at {{ $transaction->updated_at->format('Y-m-d H:i') }}</small>
+                                            @elseif ($transaction->status == 'Canceled')
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-exclamation-octagon me-1"></i>
+                                                Cancelled
+                                            </span>
+                                            <small>at {{ $transaction->updated_at->format('Y-m-d H:i') }}</small>
+                                            @elseif ($transaction->status == 'OnHold')
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                                OnHold
+                                            </span>
+                                            <small>at {{ $transaction->updated_at->format('Y-m-d H:i') }}</small>
+                                            @elseif ($transaction->status == 'Pending')
+                                            <span class="badge bg-dark">
+                                                <i class="bi bi-folder me-1"></i>
+                                                Pending
+                                            </span>
+                                            <small>at {{ $transaction->updated_at->format('Y-m-d H:i') }}</small>
                                             @endif
-
                                         </td>
                                     </tr>
                                     @endforeach
                                     @else
                                     <tr>
-                                        <td colspan="10" class="text-center">No transactions found for {{
-                                            $bank->Sb_name
+                                        <td colspan="10" class="text-center">No transactions found for {{ $bank->Sb_name
                                             }}.</td>
                                     </tr>
                                     @endif
-
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
 
 
