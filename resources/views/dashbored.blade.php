@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-@include('partials._header', ['notificationsCount' => $notificationsCount])
+@include('partials._header')
 @include('partials._sidebar')
 <main class="main" id="main">
 
@@ -17,4 +17,5 @@
     @yield('inner_content')
 </main>
 @include('partials._footer')
+@yield('notification')
 @endsection

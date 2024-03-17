@@ -1,8 +1,14 @@
 @extends('dashbored')
 
+@section('notification')
+    {{-- Define the data you want to pass to the dashboard layout --}}
+    @php
+        $notifications= ['notifications' =>  $notifications,'notificationsCount'=>$notificationsCount];
+    @endphp
+@endsection
 @section('inner_content')
 <div class="card-body">
-    <h5 class="card-title">Dashbored</h5>
+    <h5 class="card-title">Dashbored </h5>
 
     <div class="row">
         @foreach($banks as $bank)
@@ -99,7 +105,7 @@
         <div class="col-6">
             <div class="card">
                 <div class="card-body pb-0">
-                    <h5 class="card-title">Transaction Status</h5>
+                    <h5 class="card-title">Phones Status</h5>
 
                     <div id="PhoneChart" style="min-height: 400px;" class="echart"></div>
 

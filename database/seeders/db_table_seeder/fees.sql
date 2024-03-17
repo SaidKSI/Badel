@@ -1,0 +1,94 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Mar 17, 2024 at 01:50 AM
+-- Server version: 8.0.36
+-- PHP Version: 8.1.27
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `bedelportal_db`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fees`
+--
+
+-- CREATE TABLE `fees` (
+--   `id` bigint UNSIGNED NOT NULL,
+--   `min` double NOT NULL,
+--   `max` double NOT NULL,
+--   `fee` double NOT NULL,
+--   `created_at` timestamp NULL DEFAULT NULL,
+--   `updated_at` timestamp NULL DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `fees`
+--
+
+INSERT INTO `fees` (`id`, `min`, `max`, `fee`, `created_at`, `updated_at`) VALUES
+(1, 99, 2000, 20, '2023-10-24 23:22:15', '2023-10-24 23:22:16'),
+(29, 2001, 4000, 30, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(30, 4001, 8000, 40, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(31, 8001, 12000, 50, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(32, 12001, 16000, 60, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(33, 16001, 20000, 70, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(34, 20001, 24000, 80, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(35, 24001, 28000, 90, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(36, 28001, 32000, 100, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(37, 32001, 36000, 110, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(38, 36001, 40000, 120, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(39, 40001, 44000, 130, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(40, 44001, 48000, 140, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(41, 48001, 52000, 150, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(42, 52001, 56000, 160, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(43, 56001, 60000, 170, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(44, 60001, 64000, 180, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(45, 64001, 68000, 190, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(46, 68001, 72000, 200, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(47, 72001, 76000, 210, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(48, 76001, 80000, 220, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(49, 80001, 84000, 230, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(50, 84001, 88000, 240, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(51, 88001, 92000, 250, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(52, 92001, 96000, 260, '2023-10-27 17:53:28', '2023-10-27 17:53:28'),
+(53, 96001, 100000, 270, '2023-10-27 17:53:28', '2023-10-27 17:53:28');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `fees`
+--
+ALTER TABLE `fees`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `fees`
+--
+ALTER TABLE `fees`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

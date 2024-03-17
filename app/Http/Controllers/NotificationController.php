@@ -8,8 +8,9 @@ class NotificationController extends Controller
 {
   public function dashboard()
   {
-    // $notificationsCount = Auth::guard('admin')->user()->notifications()->whereNull('read_at')->count();
-    $notificationsCount = 10;
-    return view('dashboard', ['notificationsCount' => $notificationsCount]);
+    // send notifications and notifications count of the admin who islloged in to the dashbored layout 
+    $notifications = Auth::user()->notifications; 
+    $notificationsCount = Auth::user()->unreadNotifications->count();
+    return view('dashbored', ['notifications' => $notifications, 'notificationsCount' => $notificationsCount]);
   }
 }

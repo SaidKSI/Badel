@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class DashboredController extends Controller
@@ -43,9 +44,11 @@ class DashboredController extends Controller
                 'totalAmountAfterTax' => $totalAmountAfterTax,
             ];
         }
+        $notifications = Auth::user()->notifications;
+        $notificationsCount = Auth::user()->unreadNotifications->count();
         // dd($bankTotals);
         // Pass the calculated totals and the list of banks to the view
-        return view('home', compact('bankTotals', 'banks', 'holdTransactionCount', 'cancelledTransactionCount', 'pendingTransactionCount', 'terminatedTransactionCount', 'holdPhoneCount', 'cancelledPhoneCount', 'pendingPhoneCount', 'terminatedPhoneCount'));
+        return view('home', compact('bankTotals', 'banks', 'holdTransactionCount', 'cancelledTransactionCount', 'pendingTransactionCount', 'terminatedTransactionCount', 'holdPhoneCount', 'cancelledPhoneCount', 'pendingPhoneCount', 'terminatedPhoneCount', 'notifications', 'notificationsCount'));
     }
     public function users()
     {

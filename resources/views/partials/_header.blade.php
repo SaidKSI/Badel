@@ -27,32 +27,46 @@
             <li class="nav-item dropdown">
                 <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                     <i class="bi bi-bell"></i>
-                    <span class="badge bg-primary badge-number">{{ $notificationsCount }}</span>
+                    <span class="badge bg-primary badge-number">{{ $notifications['notificationsCount'] }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                     <li class="dropdown-header">
                         You have {{ $notificationsCount }} new notifications
                         <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
                     </li>
-                    @foreach ($notifications as $notification)
+                    @if($notificationsCount > 0)
+                    @foreach ($notifications['notifications'] as $notification)
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li class="notification-item">
-                        <i class="{{ $notification->icon }} text-{{ $notification->color }}"></i>
-                        <div>
-                            <h4>{{ $notification->title }}</h4>
-                            <p>{{ $notification->message }}</p>
-                            <p>{{ $notification->created_at->diffForHumans() }}</p>
-                        </div>
-                    </li>
-                    @endforeach
+                    <a href="{{ route('transaction', ['transaction_id' => $notification->data['transaction_id']]) }}">
+                        <li class="notification-item">
+
+                            <i class="bi bi-check-circle text-success"></i>
+                            <div>
+                                <h4>{{ $notification->data['transaction_id'] }}</h4>
+                                <p>{{ $notification->data['message'] }}</p>
+                                <p>{{ $notification->created_at->diffForHumans() }}</p>
+                            </div>
+                        </li>
+                    </a>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
                     <li class="dropdown-footer">
                         <a href="#">Show all notifications</a>
                     </li>
+                    @endforeach
+                    @else
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li class="notification-item">
+                        <div>
+                            <h4>No New Notifications</h4>
+                        </div>
+                    </li>
+                    @endif
                 </ul>
             </li>
 
