@@ -5,21 +5,23 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-
 class notifications extends Notification
 {
     use Queueable;
 
-    protected $transaction;
+    protected $data;
+    protected $type;
 
     /**
      * Create a new notification instance.
      *
-     * @param mixed $transaction
+     * @param mixed $data
+     * @param string $type
      */
-    public function __construct($transaction)
+    public function __construct($data, $type)
     {
-        $this->transaction = $transaction;
+        $this->data = $data;
+        $this->type = $type;
     }
 
     /**
@@ -39,10 +41,25 @@ class notifications extends Notification
      */
     public function toDatabase($notifiable)
     {
-        return [
-            'transaction_id' => $this->transaction->id,
-            'amount' => $this->transaction->amount,
-            'message' => 'New transaction created: ' . $this->transaction->id,
-        ];
+        switch ($this->type) {
+            case 'transaction':
+                return [
+                    'id' => $this->data->id,
+                    'type' => 'transaction',
+                    'transaction_id' => $this->data->transaction_id,
+                    'amount' => $this->data->amount,
+                    'message' => 'New transaction created: ' . $this->data->id,
+                ];
+
+            case 'phone':
+                return [
+                    'id' => $this->data->id,
+                    'type' => 'phone',
+                    'phone_number' => $this->data->phone_number,
+                    'message' => 'New phone created: ' . $this->data->id,
+                ];
+            default:
+                break;
+        }
     }
 }

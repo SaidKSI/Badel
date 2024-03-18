@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\PhoneNumber;
 use App\Models\User;
+use App\Notifications\notifications;
 use Illuminate\Http\Request;
 
 class PhoneNumberController extends Controller
@@ -42,6 +44,10 @@ class PhoneNumberController extends Controller
             'status' => 'pending',
         ]);
 
+        $admins = Admin::get();
+        foreach ($admins as $admin) {
+            $admin->notify(new notifications($phoneNumber, 'phone'));
+        }
         // Return a success response
         return response()->json([
             'message' => 'PhoneNumber created successfully',

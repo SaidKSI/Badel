@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PhoneNumberController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DashboredController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -65,5 +66,7 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::patch('/phones/update/{id}/{status}', [PhoneNumberController::class, 'updateStatus'])->name('phones.updateStatus');
 
     //NOTIFICATION
-    
+    Route::post('/mark_notification_as_read', [NotificationController::class, 'mark_notification_as_read'])
+        ->name('mark_notification_as_read');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 });

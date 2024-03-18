@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 
 class DashboredController extends Controller
 {
@@ -44,11 +45,15 @@ class DashboredController extends Controller
                 'totalAmountAfterTax' => $totalAmountAfterTax,
             ];
         }
+
         $notifications = Auth::user()->notifications;
         $notificationsCount = Auth::user()->unreadNotifications->count();
+        View::share('notifications', $notifications);
+        View::share('notificationsCount', $notificationsCount);
+        // dd($notifications);
         // dd($bankTotals);
         // Pass the calculated totals and the list of banks to the view
-        return view('home', compact('bankTotals', 'banks', 'holdTransactionCount', 'cancelledTransactionCount', 'pendingTransactionCount', 'terminatedTransactionCount', 'holdPhoneCount', 'cancelledPhoneCount', 'pendingPhoneCount', 'terminatedPhoneCount', 'notifications', 'notificationsCount'));
+        return view('home', compact('bankTotals', 'banks', 'holdTransactionCount', 'cancelledTransactionCount', 'pendingTransactionCount', 'terminatedTransactionCount', 'holdPhoneCount', 'cancelledPhoneCount', 'pendingPhoneCount', 'terminatedPhoneCount'));
     }
     public function users()
     {

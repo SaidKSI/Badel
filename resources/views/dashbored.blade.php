@@ -10,12 +10,11 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html"></a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
+                <li class="breadcrumb-item active">Dashboard </li>
             </ol>
         </nav>
     </div>
     @yield('inner_content')
 </main>
-@include('partials._footer')
-@yield('notification')
+{{-- @include('partials._footer') --}}
 @endsection

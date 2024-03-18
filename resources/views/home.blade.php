@@ -1,11 +1,5 @@
 @extends('dashbored')
 
-@section('notification')
-    {{-- Define the data you want to pass to the dashboard layout --}}
-    @php
-        $notifications= ['notifications' =>  $notifications,'notificationsCount'=>$notificationsCount];
-    @endphp
-@endsection
 @section('inner_content')
 <div class="card-body">
     <h5 class="card-title">Dashbored </h5>

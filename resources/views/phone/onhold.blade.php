@@ -42,7 +42,10 @@
                   @csrf
                   @method('PATCH')
                   <button type="submit" class="btn btn-success me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Terminate">
+                    title="Terminate"
+                    title="Terminate" data-bs-placement="top" 
+                    data-bs-html="true" 
+                    onmouseenter="showTooltip(this)">
                     <i class="bi bi-check-circle"></i>
                   </button>
                 </form>
@@ -53,7 +56,10 @@
                   @csrf
                   @method('PATCH')
                   <button type="submit" class="btn btn-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Cancel">
+                    title="Cancel"
+                    title="Terminate" data-bs-placement="top" 
+                    data-bs-html="true" 
+                    onmouseenter="showTooltip(this)">
                     <i class="bi bi-exclamation-octagon"></i>
                   </button>
                 </form>

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class PhoneNumberController extends Controller
 {
-    public function index(Request $request, $status)
+    public function index($status)
     {
         $view = '';
 

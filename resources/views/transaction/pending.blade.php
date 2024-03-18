@@ -113,9 +113,10 @@
                 <button type="button" class="btn btn-sm btn-info" data-bs-toggle="tooltip" data-bs-placement="top"
                   data-bs-html="true"
                   title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
-                  onclick="showTooltip(this)">
+                  onmouseenter="showTooltip(this)">
                   <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"></i>
                 </button>
+
               </td>
               <td>{{ $transaction->send_full_name }}</td>
               <td>{{ $transaction->receiver_full_name }}</td>
@@ -132,7 +133,9 @@
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="btn btn-success me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Terminate">
+                    title="Terminate" data-bs-placement="top" 
+                    data-bs-html="true" 
+                    onmouseenter="showTooltip(this)">
                       <i class="bi bi-check-circle"></i>
                     </button>
                   </form>
@@ -143,7 +146,8 @@
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="btn btn-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Cancel">
+                      title="Cancel" data-bs-placement="top" title="Terminate" data-bs-placement="top"
+                      data-bs-html="true" onmouseenter="showTooltip(this)">
                       <i class="bi bi-exclamation-octagon"></i>
                     </button>
                   </form>
@@ -154,7 +158,8 @@
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Hold">
+                      title="Hold" data-bs-placement="top" title="Terminate" data-bs-placement="top" data-bs-html="true"
+                      onmouseenter="showTooltip(this)">
                       <i class="bx bxs-hand"></i>
                     </button>
                   </form>

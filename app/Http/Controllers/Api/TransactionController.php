@@ -89,7 +89,7 @@ class TransactionController extends Controller
 
         $admins = Admin::get();
         foreach ($admins as $admin) {
-            $admin->notify(new notifications($transaction));
+            $admin->notify(new notifications($transaction,'transaction'));
         }
         return response()->json([
             'status' => true,
