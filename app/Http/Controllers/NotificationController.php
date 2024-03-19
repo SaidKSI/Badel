@@ -35,23 +35,26 @@ class NotificationController extends Controller
 
   public function mark_notification_as_read(Request $request)
   {
-    // Validate the incoming request
-    $request->validate([
-      'notification_id' => 'required|exists:notifications,id',
-      'notification_type' => 'required|in:transaction,phone',
-    ]);
-    dd($request);
+    try {
+      // Validate the incoming request
+      $request->validate([
+        'notification_id' => 'required|exists:notifications,id',
+        'notification_type' => 'required|in:transaction,phone',
+      ]);
 
-    // Find the notification
-    $notification = Auth::user()->notifications->find($request->notification_id);
+      // Find the notification
+      $notification = Auth::user()->notifications->find($request->notification_id);
 
-    if (!$notification) {
-      return response()->json(['message' => 'Notification not found.'], 404);
+      if (!$notification) {
+        return response()->json(['message' => 'Notification not found.'], 404);
+      }
+
+      // Mark the notification as read
+      $notification->markAsRead();
+
+      return response()->json(['message' => 'Notification marked as read.']);
+    } catch (\Exception $e) {
+      return response()->json(['message' => $e->getMessage()], 500);
     }
-
-    // Mark the notification as read
-    $notification->markAsRead();
-
-    return response()->json(['message' => 'Notification marked as read.']);
   }
 }

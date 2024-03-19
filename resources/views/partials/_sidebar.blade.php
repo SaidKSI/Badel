@@ -7,31 +7,6 @@
 				<span>Dashboard</span>
 			</a>
 		</li>
-		{{-- <li class="nav-heading">Transaction</li>
-		<li class="nav-item">
-			<a class="nav-link collapsed" href="/admin/transactions/pending">
-				<i class="bi bi-clock-fill"></i>
-				<span>Pending Transaction</span>
-			</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link collapsed" href="/admin/transactions/terminated">
-				<i class="bi bi-check2-square"></i>
-				<span>Accepted Transaction</span>
-			</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link collapsed" href="/admin/transactions/onhold">
-				<i class="bi bi-clock-fill"></i>
-				<span>On Hold Transaction</span>
-			</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link collapsed" href="/admin/transactions/Canceled">
-				<i class="bx bxs-hand"></i>
-				<span>Cancelled Transaction</span>
-			</a>
-		</li> --}}
 		<li class="nav-item">
 			<a class="nav-link collapsed" data-bs-target="#transaction" data-bs-toggle="collapse" href="#">
 				<i class="bi bi-arrow-left-right"></i><span>Transactions</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -43,15 +18,16 @@
 					</a>
 				</li>
 				<li>
-					<a href="/admin/transactions/terminated">
-						<i class="bi bi-check2-square"></i><span>Accepted Transaction</span>
-					</a>
-				</li>
-				<li>
 					<a href="/admin/transactions/onhold">
 						<i class="bi bi-clock-fill"></i><span>On Hold Transaction</span>
 					</a>
 				</li>
+				<li>
+					<a href="/admin/transactions/terminated">
+						<i class="bi bi-check2-square"></i><span>Accepted Transaction</span>
+					</a>
+				</li>
+
 				<li>
 					<a href="/admin/transactions/Canceled">
 						<i class="bx bxs-hand"></i><span>Cancelled Transaction</span>
@@ -70,15 +46,16 @@
 					</a>
 				</li>
 				<li>
-					<a href="/admin/phones/terminated">
-						<i class="bi bi-check2-square"></i><span>Accepted Phone</span>
-					</a>
-				</li>
-				<li>
 					<a href="/admin/phones/onhold">
 						<i class="bi bi-clock-fill"></i><span>On Hold Phone</span>
 					</a>
 				</li>
+				<li>
+					<a href="/admin/phones/terminated">
+						<i class="bi bi-check2-square"></i><span>Accepted Phone</span>
+					</a>
+				</li>
+
 				<li>
 					<a href="/admin/phones/Canceled">
 						<i class="bx bxs-hand"></i><span>Cancelled Phone</span>
@@ -132,12 +109,24 @@
 				</li>
 			</ul>
 		</li>
-		{{-- <li class="nav-item">
-			<a class="nav-link collapsed" href="/admin/history">
-				<i class="bx bx-history"></i>
-				<span>History</span>
-			</a>
-		</li> --}}
 	</ul>
+	{{-- <script>
+		$(document).ready(function() {
+    // Get the current URL
+    const currentUrl = window.location.pathname;
 
+    // Loop through each navigation item
+    $('.nav-item').each(function() {
+        // Get the URL of the navigation item
+        const navUrl = $(this).find('a').attr('href');
+			console.log($(this))
+        // Check if the current URL starts with the navigation item URL
+        if (currentUrl.startsWith(navUrl)) {
+            // Add the 'active' class to the navigation item
+            $(this).addClass('active');
+        }
+    });
+});
+
+	</script> --}}
 </aside>

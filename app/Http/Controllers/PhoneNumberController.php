@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PhoneNumber;
 use Illuminate\Http\Request;
 
+
 class PhoneNumberController extends Controller
 {
     public function index($status)
@@ -44,18 +45,17 @@ class PhoneNumberController extends Controller
     }
     public function updateStatus($id, $status)
     {
-        // Find the transaction
+        // Find the phone
         $phone = PhoneNumber::findOrFail($id);
 
         if (!$phone) {
-            return redirect()->route('phones')->with(['error' => 'Phone not found'], 404);
+            return response()->json(['error' => 'Phone not found'], 404);
         }
 
         // Update the phone status
         $phone->status = $status;
         $phone->save();
-        return back()->with(['message' => 'Phone updated successfully', 'data' => $phone]);
 
-        // return redirect()->route('phones', ['status' => $status])->with(['message' => 'Phone updated successfully', 'data' => $transaction]);
+        return response()->json(['message' => 'Phone updated successfully', 'data' => $phone]);
     }
 }

@@ -1,0 +1,6 @@
+POST http://127.0.0.1:8000/admin/mark_notification_as_read Authorization: Bearer 13|pRYsSLSVn3qjScyTUyctjyYBvlwRxMyMXXuBzRvb4e1e1950
+
+{
+"notification_id": "0b7f956f-20cb-4b53-bcdb-07935e294c3f",
+"notification_type": "transaction"
+}

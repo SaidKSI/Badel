@@ -54,6 +54,7 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     // UPDATE TRANSACTION STAUTS
     Route::patch('/transactions/update/{id}/{status}', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+    
     Route::patch('/transactions/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
     //FEES

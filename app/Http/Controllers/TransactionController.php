@@ -78,15 +78,13 @@ class TransactionController extends Controller
         $transaction = Transaction::findOrFail($id);
 
         if (!$transaction) {
-            return redirect()->route('transactions')->with(['error' => 'Transaction not found'], 404);
+            return response()->json(['error' => 'Transaction not found'], 404);
         }
 
         // Update the transaction status
         $transaction->status = $status;
         $transaction->save();
-        return back()->with(['message' => 'Transaction updated successfully', 'data' => $transaction]);
-
-        // return redirect()->route('transactions', ['status' => $status])->with(['message' => 'Transaction updated successfully', 'data' => $transaction]);
+        return response()->json(['message' => 'Phone Transaction successfully', 'data' => $transaction]);
     }
 
     public function show($transaction_id)

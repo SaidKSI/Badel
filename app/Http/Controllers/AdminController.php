@@ -26,7 +26,7 @@ class AdminController extends Controller
             $request->session()->regenerate();
             return redirect()->route('dashbored');
         }
-
+        
         return back()->withErrors(['email' => 'Invalid credentials'])->withInput($request->only('email'));
     }
     public function logout(Request $request)

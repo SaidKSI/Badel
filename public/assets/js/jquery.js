@@ -1,23 +1,50 @@
-function fetchNotifications() {
-  $.ajax({
-      url: '/admin/notifications', // URL to the index route of NotificationController
-      type: 'GET',
-      dataType: 'json', // Specify the expected data type
-      success: function(response) {
-          console.log(response);
-      },
-      error: function(xhr, status, error) {
-          console.error(xhr.responseText);
-      }
-  });
+function updateTransactionStatus(transaction_id, status, row) {
+
+    if (
+        confirm(
+            `Are you sure you want to ${status.toLowerCase()} this Transaction?`
+        )
+    ) {
+        $.ajax({
+            url: `/admin/transactions/update/${transaction_id}/${status}`,
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                _method: "PATCH",
+            },
+            success: function (response) {
+                // Remove the row from the table
+                $(row).remove();
+                console.log(response.message);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                console.error(status);
+                console.error(xhr);
+            },
+        });
+    }
 }
 
-// Function to fetch notifications initially and set interval to fetch every 30 seconds
-$(document).ready(function() {
-  fetchNotifications(); // Fetch notifications initially
-
-  // Set interval to fetch notifications every 30 seconds
-  setInterval(function() {
-      fetchNotifications();
-  }, 30000); // 30 seconds = 30,000 milliseconds
-});
+function updatePhoneStatus(phoneId, status, row) {
+    if (
+        confirm(`Are you sure you want to ${status.toLowerCase()} this phone?`)
+    ) {
+        $.ajax({
+            url: `/admin/phones/update/${phoneId}/${status}`,
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                _method: "PATCH",
+            },
+            success: function (response) {
+                // Remove the row from the table
+                $(row).remove();
+                console.log(response.message);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            },
+        });
+    }
+}

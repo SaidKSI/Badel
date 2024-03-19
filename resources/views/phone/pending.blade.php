@@ -15,7 +15,7 @@
     }
   </style>
   <div class="card-body">
-    <h5 class="card-title">Pending Phone </h5>
+    <h5 class="card-title">Pending Phone</h5>
 
     <div class="table-responsive">
       <table class="table datatable">
@@ -35,49 +35,23 @@
                 $phone->user->last_name }}</a></td>
             <td>{{ $phone->phone_number }}</td>
             <td>{{ $phone->created_at->format('Y-m-d H:i') }}</td>
-            <td>
-              <div class="d-flex">
-                <form action="{{ route('phones.updateStatus', ['id' => $phone->id, 'status' => 'Terminated']) }}"
-                  method="POST" onsubmit="return confirm('Are you sure you want to terminate this phone?');">
-                  @csrf
-                  @method('PATCH')
-                  <button type="submit" class="btn btn-success me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Terminate"
-                    title="Terminate" data-bs-placement="top" 
-                    data-bs-html="true" 
-                    onmouseenter="showTooltip(this)" >
-                    <i class="bi bi-check-circle"></i>
-                  </button>
-                </form>
+            <td class="d-flex">
 
-                <form action="
-                    {{ route('phones.updateStatus', ['id' => $phone->id, 'status' => 'Canceled']) }}
-                    " method="POST" onsubmit="return confirm('Are you sure you want to cancel this phone?');">
-                  @csrf
-                  @method('PATCH')
-                  <button type="submit" class="btn btn-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Cancel"
-                    title="Terminate" data-bs-placement="top" 
-                    data-bs-html="true" 
-                    onmouseenter="showTooltip(this)" >
-                    <i class="bi bi-exclamation-octagon"></i>
-                  </button>
-                </form>
+              <button type="button" class="btn btn-success me-2"
+                onclick="updatePhoneStatus({{ $phone->id }}, 'Terminated', this.closest('tr'))">
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button type="button" class="btn btn-warning me-2"
+                onclick="updatePhoneStatus({{ $phone->id }}, 'OnHold', this.closest('tr'))">
+                <i class="bx bxs-hand"></i>
+              </button>
 
-                <form action="
-                  {{ route('phones.updateStatus', ['id' => $phone->id, 'status' => 'OnHold']) }}
-                  " method="POST" onsubmit="return confirm('Are you sure you want to put this phone on hold?');">
-                  @csrf
-                  @method('PATCH')
-                  <button type="submit" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Hold"
-                    title="Terminate" data-bs-placement="top" 
-                    data-bs-html="true" 
-                    onmouseenter="showTooltip(this)" >
-                    <i class="bx bxs-hand"></i>
-                  </button>
-                </form>
-              </div>
+              <button type="button" class="btn btn-danger"
+                onclick="updatePhoneStatus({{ $phone->id }}, 'Canceled', this.closest('tr'))">
+                <i class="bi bi-exclamation-octagon"></i>
+              </button>
+
+
             </td>
           </tr>
           @endforeach
@@ -92,5 +66,28 @@
   </div>
 </div>
 
+<script>
+  function updatePhoneStatus(phoneId, status, row) {
+    if (confirm(`Are you sure you want to ${status.toLowerCase()} this phone?`)) {
+      $.ajax({
+        url: `/admin/phones/update/${phoneId}/${status}`,
+        type: 'POST',
+        data: {
+          _token: '{{ csrf_token() }}',
+          _method: 'PATCH',
+          status: status
+        },
+        success: function (response) {
+          // Remove the row from the table
+          $(row).remove();
+          console.log(response.message);
+        },
+        error: function (xhr, status, error) {
+          console.error(error);
+        }
+      });
+    }
+  }
+</script>
 
 @endsection

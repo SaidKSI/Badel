@@ -125,45 +125,22 @@
               <td>{{ $transaction->sendBank->Sb_name }}</td>
               <td>{{ $transaction->receiverBank->Sb_name }}</td>
               <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
-              <td>
-                <div class="d-flex">
-                  <form
-                    action="{{ route('transactions.updateStatus', ['id' => $transaction->id, 'status' => 'Terminated']) }}"
-                    method="POST" onsubmit="return confirm('Are you sure you want to terminate this transaction?');">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="btn btn-success me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Terminate" data-bs-placement="top" 
-                    data-bs-html="true" 
-                    onmouseenter="showTooltip(this)">
-                      <i class="bi bi-check-circle"></i>
-                    </button>
-                  </form>
+              <td class="d-flex">
 
-                  <form action="
-                    {{ route('transactions.updateStatus', ['id' => $transaction->id, 'status' => 'Canceled']) }}
-                    " method="POST" onsubmit="return confirm('Are you sure you want to cancel this transaction?');">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="btn btn-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Cancel" data-bs-placement="top" title="Terminate" data-bs-placement="top"
-                      data-bs-html="true" onmouseenter="showTooltip(this)">
-                      <i class="bi bi-exclamation-octagon"></i>
-                    </button>
-                  </form>
-
-                  <form action="
-                  {{ route('transactions.updateStatus', ['id' => $transaction->id, 'status' => 'OnHold']) }}
-                  " method="POST" onsubmit="return confirm('Are you sure you want to put this transaction on hold?');">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Hold" data-bs-placement="top" title="Terminate" data-bs-placement="top" data-bs-html="true"
-                      onmouseenter="showTooltip(this)">
-                      <i class="bx bxs-hand"></i>
-                    </button>
-                  </form>
-                </div>
+                <button type="button" class="btn btn-success me-2"
+                  onclick="updateTransactionStatus({{ $transaction->id }}, 'Terminated', this.closest('tr'))">
+                  <i class="bi bi-check-circle"></i>
+                </button>
+                <button type="button" class="btn btn-warning me-2"
+                  onclick="updateTransactionStatus({{ $transaction->id }}, 'OnHold', this.closest('tr'))">
+                  <i class="bx bxs-hand"></i>
+                </button>
+  
+                <button type="button" class="btn btn-danger"
+                  onclick="updateTransactionStatus({{ $transaction->id }}, 'Canceled', this.closest('tr'))">
+                  <i class="bi bi-exclamation-octagon"></i>
+                </button>
+  
               </td>
             </tr>
             @endforeach
@@ -177,6 +154,33 @@
       </div>
   </div>
 </div>
+<script>
+  function updateTransactionStatus(transaction_id, status, row) {
 
-
+if (
+    confirm(
+        `Are you sure you want to ${status.toLowerCase()} this Transaction?`
+    )
+) {
+    $.ajax({
+        url: `/admin/transactions/update/${transaction_id}/${status}`,
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            _method: "PATCH",
+        },
+        success: function (response) {
+            // Remove the row from the table
+            $(row).remove();
+            console.log(response.message);
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+            console.error(status);
+            console.error(xhr);
+        },
+    });
+}
+}
+</script>
 @endsection
