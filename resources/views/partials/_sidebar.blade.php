@@ -40,7 +40,7 @@
 				<i class="bi bi-phone"></i><span>Phone Numbers</span><i class="bi bi-chevron-down ms-auto"></i>
 			</a>
 			<ul id="phone" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-				<li>
+				<li >
 					<a href="/admin/phones/pending">
 						<i class="bi bi-clock-fill"></i><span>Pending Phone</span>
 					</a>

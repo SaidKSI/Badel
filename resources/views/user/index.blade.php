@@ -19,7 +19,7 @@
         {{-- <livewire:on-hold> --}}
 
             <div class="table-responsive">
-                <table class="table datatable">
+                <table class="table datatable table-striped">
                     <thead>
                         <tr>
                             <th>ID</th>

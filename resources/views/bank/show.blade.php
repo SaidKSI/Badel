@@ -73,7 +73,7 @@
                     <div class="tab-pane fade show active profile-overview" id="profile-overview">
 
                         <div class="table-responsive">
-                            <table class="table datatable">
+                            <table class="table datatable table-striped">
                                 <thead>
                                     <tr>
                                         <th>Bedel ID</th>
@@ -100,13 +100,10 @@
                                         @endphp
                                         <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
                                             {{ $balance }}
-                                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" data-bs-html="true"
+                                            <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
                                                 title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
-                                                onclick="showTooltip(this)">
-                                                <i class="bi bi-info-circle text-primary"
-                                                    style="font-size: 0.8rem;"></i>
-                                            </button>
+                                                onmouseenter="showTooltip(this)"></i>
                                         </td>
                                         <td>{{ $transaction->send_full_name }}</td>
                                         <td>{{ $transaction->receiver_full_name }}</td>
@@ -224,7 +221,7 @@
                     </div>
                     <div class="tab-pane fade pt-3" id="profile-settings">
                         <div class="table-responsive">
-                            <table class="table datatable">
+                            <table class="table datatable table-striped">
                                 <thead>
                                     <tr>
                                         <th>IN or OUT</th>
@@ -259,13 +256,10 @@
                                         @endphp
                                         <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
                                             {{ $balance }}
-                                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" data-bs-html="true"
+                                            <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
                                                 title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
-                                                onclick="showTooltip(this)">
-                                                <i class="bi bi-info-circle text-primary"
-                                                    style="font-size: 0.8rem;"></i>
-                                            </button>
+                                                onmouseenter="showTooltip(this)"></i>
                                         </td>
                                         <td>
                                             @if ($transaction->status == 'Terminated')

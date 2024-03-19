@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sbank;
 use App\Models\Transaction;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
 
 class TransactionController extends Controller
 {

@@ -100,7 +100,7 @@
                             </form> --}}
 
                             <div class="table-responsive">
-                                <table class="table datatable">
+                                <table class="table datatable table-striped">
                                     <thead>
                                         <tr>
                                             <th>Bedel ID</th>
@@ -119,21 +119,18 @@
                                         @if ($user->transaction && count($user->transaction) > 0)
                                         @foreach ($user->transaction as $transaction)
                                         <tr>
-                                           <td> <a
-                                                href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
-                                                $transaction->transaction_id }}</a></td>
+                                            <td> <a
+                                                    href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
+                                                    $transaction->transaction_id }}</a></td>
                                             @php
                                             $balance = $transaction->amount - $transaction->amount_after_tax
                                             @endphp
                                             <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
                                                 {{ $balance }}
-                                                <button type="button" class="btn btn-sm btn-info"
+                                                <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
                                                     data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
                                                     title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
-                                                    onclick="showTooltip(this)">
-                                                    <i class="bi bi-info-circle text-primary"
-                                                        style="font-size: 0.8rem;"></i>
-                                                </button>
+                                                    onmouseenter="showTooltip(this)"></i>
                                             </td>
                                             <td>{{ $transaction->send_full_name }}</td>
                                             <td>{{ $transaction->receiver_full_name }}</td>
@@ -191,7 +188,7 @@
 
                         <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                             <div class="table-responsive">
-                                <table class="table datatable">
+                                <table class="table datatable table-striped">
                                     <thead>
                                         <tr>
 

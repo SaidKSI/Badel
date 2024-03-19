@@ -36,19 +36,19 @@
 
           <div class="col-md-3">
             <div class="col-sm-10">
-                <label for="status">Status</label>
-                <select class="form-select" id="status" name="status">
-                    <option value="" {{ request('status') == '' ? 'selected' : '' }}>Status</option>
-                    <option value="terminated" {{ request('status') == 'terminated' ? 'selected' : '' }}>
-                        Terminated
-                    </option>
-                    <option value="canceled" {{ request('status') == 'canceled' ? 'selected' : '' }}>
-                        Canceled
-                    </option>
-                </select>
+              <label for="status">Status</label>
+              <select class="form-select" id="status" name="status">
+                <option value="" {{ request('status')=='' ? 'selected' : '' }}>Status</option>
+                <option value="terminated" {{ request('status')=='terminated' ? 'selected' : '' }}>
+                  Terminated
+                </option>
+                <option value="canceled" {{ request('status')=='canceled' ? 'selected' : '' }}>
+                  Canceled
+                </option>
+              </select>
             </div>
-        </div>
-        
+          </div>
+
 
           <div class="col-md-1">
             <button class="btn btn-primary">Search</button>
@@ -60,7 +60,7 @@
       </form>
 
       <div class="table-responsive">
-        <table class="table datatable">
+        <table class="table datatable table-striped">
           <thead>
             <tr>
               <th>Username</th>
@@ -74,7 +74,7 @@
             @foreach ($phones as $phone)
             <tr>
               <td><a href="{{route('user',['id'=>$phone->user_id])}}">{{ $phone->user->first_name . " " .
-                $phone->user->last_name }}</a></td>
+                  $phone->user->last_name }}</a></td>
               <td>{{ $phone->phone_number }}</td>
               <td>{{ $phone->created_at->format('Y-m-d H:i') }}</td>
               <td>

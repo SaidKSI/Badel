@@ -18,7 +18,7 @@
     <h5 class="card-title">Pending Phone</h5>
 
     <div class="table-responsive">
-      <table class="table datatable">
+      <table class="table datatable table-striped">
         <thead>
           <tr>
             <th>User</th>

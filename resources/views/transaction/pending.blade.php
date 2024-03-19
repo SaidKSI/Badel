@@ -80,7 +80,7 @@
       </form>
 
       <div class="table-responsive">
-        <table class="table datatable">
+        <table class="table datatable table-striped">
           <thead>
             <tr>
               <th>Username</th>
@@ -110,12 +110,12 @@
               @endphp
               <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
                 {{ $balance }}
-                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="tooltip" data-bs-placement="top"
-                  data-bs-html="true"
+
+                <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;" data-bs-toggle="tooltip"
+                  data-bs-placement="top" data-bs-html="true"
                   title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
-                  onmouseenter="showTooltip(this)">
-                  <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"></i>
-                </button>
+                  onmouseenter="showTooltip(this)"></i>
+
 
               </td>
               <td>{{ $transaction->send_full_name }}</td>
@@ -135,12 +135,12 @@
                   onclick="updateTransactionStatus({{ $transaction->id }}, 'OnHold', this.closest('tr'))">
                   <i class="bx bxs-hand"></i>
                 </button>
-  
+
                 <button type="button" class="btn btn-danger"
                   onclick="updateTransactionStatus({{ $transaction->id }}, 'Canceled', this.closest('tr'))">
                   <i class="bi bi-exclamation-octagon"></i>
                 </button>
-  
+
               </td>
             </tr>
             @endforeach

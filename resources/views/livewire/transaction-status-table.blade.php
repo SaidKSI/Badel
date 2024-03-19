@@ -1,6 +1,3 @@
-@extends('dashbored')
-
-@section('inner_content')
 <div class="card">
   <style>
     th {
@@ -14,70 +11,9 @@
       white-space: nowrap;
     }
   </style>
-  <div class="card-body">
-    <h5 class="card-title">Cancelled Transaction <span>| {{$transactionCount}} in {{$date_difference}}
-        Days</span></h5>
 
-    <form action="">
-      <div class="row pb-4">
-        <div class="col">
-          <div class="col-sm-10">
-            <label for="start_date">Start Date</label>
-            <input type="date" class="form-control" id="start_date" name="start_date"
-              value="{{ old('start_date', $start_date) }}">
-          </div>
-        </div>
-        <div class="col">
-          <div class="col-sm-10">
-            <label for="end_date">End Date</label>
-            <input type="date" class="form-control" id="end_date" name="end_date"
-              value="{{ old('end_date', $end_date) }}">
-          </div>
-        </div>
-        <div class="col">
-          <div class="col-sm-10">
-            <label for="sendBank">Send Bank</label>
-            <select class="form-select" id="sendBank" name="send_sb_id">
-              <option value="" {{ request('send_sb_id')=="" ? 'selected' : '' }}>Send Bank
-              </option>
-              @foreach($banks as $bank)
-              <option value="{{ $bank->id }}" {{ request('send_sb_id')==$bank->id ?
-                'selected' : '' }}>
-                {{ $bank->Sb_name }}
-              </option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div class="col">
-          <div class="col-sm-10">
-            <label for="receiver">Receiver Bank</label>
-            <select class="form-select" id="receiver" name="receiver_sb_id">
-              <option value="" {{ request('receiver_sb_id')=="" ? 'selected' : '' }}>
-                Receiver Bank</option>
-              @foreach($banks as $bank)
-              <option value="{{ $bank->id }}" {{ request('receiver_sb_id')==$bank->id ?
-                'selected' : '' }}>
-                {{ $bank->Sb_name }}
-              </option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-
-
-
-      </div>
-      <div class="d-flex  gap-3">
-        <div class="">
-          <button class="btn btn-primary">Search</button>
-        </div>
-        <div class="">
-          <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
-        </div>
-      </div>
-
-    </form>
+  <h5 class="card-title"> {{$status}} Transaction</h5>
+  {{-- <livewire:on-hold> --}}
 
 
     <div class="table-responsive">
@@ -103,20 +39,21 @@
           <tr>
             <td><a href="{{route('user',['id'=>$transaction->user_id])}}">{{ $transaction->user->first_name . " " .
                 $transaction->user->last_name }}</a></td>
-
             <td><a href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
                 $transaction->transaction_id }}</a></td>
             </td>
-
             @php
             $balance = $transaction->amount - $transaction->amount_after_tax
             @endphp
             <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
               {{ $balance }}
+
               <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;" data-bs-toggle="tooltip"
                 data-bs-placement="top" data-bs-html="true"
                 title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
                 onmouseenter="showTooltip(this)"></i>
+
+
             </td>
             <td>{{ $transaction->send_full_name }}</td>
             <td>{{ $transaction->receiver_full_name }}</td>
@@ -125,11 +62,55 @@
             <td>{{ $transaction->sendBank->Sb_name }}</td>
             <td>{{ $transaction->receiverBank->Sb_name }}</td>
             <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
+            @switch($status)
+            @case('Pending')
+            <td class="d-flex">
+
+              <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Terminated')"
+                class="btn btn-success me-2">
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'OnHold')"
+                class="btn btn-warning me-2">
+                <i class="bx bxs-hand"></i>
+              </button>
+
+              <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Canceled')" class="btn btn-danger">
+                <i class="bi bi-exclamation-octagon"></i>
+              </button>
+
+            </td>
+            @break
+            @case('Terminated')
+            <td>
+              <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>
+                Terminated</span> <small>at {{ $transaction->updated_at->format('Y-m-d H:i')}}
+              </small>
+            </td>
+            @break
+            @case('OnHold')
+            <td class="d-flex">
+              <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Terminated')"
+                class="btn btn-success me-2">
+                <i class="bi bi-check-circle"></i>
+
+                <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Terminated')"
+                  class="btn btn-success me-2">
+                  <i class="bi bi-check-circle"></i>
+                </button>
+            </td>
+            @break
+            @case('Canceled')
             <td>
               <span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>
                 Cancelled</span> <small>at {{ $transaction->updated_at->format('Y-m-d H:i')}}
               </small>
             </td>
+            @break
+            @default
+
+            @endswitch
+
           </tr>
           @endforeach
           @else
@@ -140,9 +121,34 @@
         </tbody>
       </table>
     </div>
-  </div>
 </div>
+{{-- <script>
+  function updateTransactionStatus(transaction_id, status, row) {
+  
+  if (
+      confirm(
+          `Are you sure you want to ${status.toLowerCase()} this Transaction?`
+      )
+  ) {
+      $.ajax({
+          url: `/admin/transactions/update/${transaction_id}/${status}`,
+          type: "POST",
+          data: {
+              _token: "{{ csrf_token() }}",
+              _method: "PATCH",
+          },
+          success: function (response) {
+              // Remove the row from the table
+              $(row).remove();
+              console.log(response.message);
+          },
+          error: function (xhr, status, error) {
+              console.error(error);
+              console.error(status);
+              console.error(xhr);
+          },
+      });
+  }
+  }
 
-
-
-@endsection
+</script> --}}
