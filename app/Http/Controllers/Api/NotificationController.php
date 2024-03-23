@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
 
 class NotificationController extends Controller
 {
-    public function getAllList() {
+    public function index() {
         $user = Auth::user();
 
          $notifications = DB::table('notifications')

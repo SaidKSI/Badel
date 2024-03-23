@@ -29,7 +29,7 @@
 
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" id="notification-menu"
-                    style="font-size: 15px; height: 300px; overflow-y: auto;">
+                    style="font-size: 15px; max-height: 300px; overflow-y: auto;">
 
                 </ul>
             </li>
@@ -138,8 +138,7 @@ $(document).on('click', '.notification-item', function() {
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
         body: JSON.stringify({
-            notification_id: notificationId,
-            notification_type: notificationType
+            notification_id: notificationId
         })
     })
     .then(response => {
@@ -149,7 +148,8 @@ $(document).on('click', '.notification-item', function() {
         return response.json();
     })
     .then(data => {
-        console.log(data.message); // Log success message
+        console.log(data.message);// Log success message
+        fetchNotifications();
         // Remove the notification item from the UI
         $(this).remove();
     })

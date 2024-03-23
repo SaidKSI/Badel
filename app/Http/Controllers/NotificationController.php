@@ -38,9 +38,7 @@ class NotificationController extends Controller
     try {
       // Validate the incoming request
       $request->validate([
-        'notification_id' => 'required|exists:notifications,id',
-        'notification_type' => 'required|in:transaction,phone',
-      ]);
+        'notification_id' => 'required|exists:notifications,id'      ]);
 
       // Find the notification
       $notification = Auth::user()->notifications->find($request->notification_id);

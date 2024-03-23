@@ -11,7 +11,7 @@ class TransactionStatusTable extends Component
 {
     public $status;
     public $transactions;
-    public $banks;
+    // public $banks;
 
     public function mount($status)
     {
@@ -33,7 +33,7 @@ class TransactionStatusTable extends Component
             ->get();
 
         // Get banks
-        $this->banks = Sbank::get();
+        // $this->banks = Sbank::get();
     }
 
     public function updateTransactionStatus($transaction_id, $status)

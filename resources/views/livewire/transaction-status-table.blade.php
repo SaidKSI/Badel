@@ -1,4 +1,4 @@
-<div class="card">
+<div>
   <style>
     th {
       font-size: 12px;
@@ -93,11 +93,10 @@
               <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Terminated')"
                 class="btn btn-success me-2">
                 <i class="bi bi-check-circle"></i>
-
-                <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Terminated')"
-                  class="btn btn-success me-2">
-                  <i class="bi bi-check-circle"></i>
-                </button>
+              </button>
+              <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Canceled')" class="btn btn-danger">
+                <i class="bi bi-exclamation-octagon"></i>
+              </button>
             </td>
             @break
             @case('Canceled')

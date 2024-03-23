@@ -189,10 +189,9 @@
                 </div>
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                     @livewire('transaction-status-table', ['status' => 'Pending'])
-                    @livewire('transaction-status-table', ['status' => 'Terminated'])
                     @livewire('transaction-status-table', ['status' => 'OnHold'])
+                    @livewire('transaction-status-table', ['status' => 'Terminated'])
                     @livewire('transaction-status-table', ['status' => 'Canceled'])
-
                 </div>
                 <div class="tab-pane fade phone pt-3" id="phone_number">
                 </div>
