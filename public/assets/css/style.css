@@ -42,8 +42,8 @@ h6 {
 # Main
 --------------------------------------------------------------*/
 #main {
-  margin-top: 60px;
-  padding: 20px 30px;
+  margin-top: 80px;
+  padding: 30px;
   transition: all 0.3s;
 }
 
@@ -629,13 +629,13 @@ h6 {
   background-color: #aab7cf;
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
 
   #main,
   #footer {
     margin-left: 300px;
   }
-}
+} */
 
 @media (max-width: 1199px) {
   .toggle-sidebar .sidebar {

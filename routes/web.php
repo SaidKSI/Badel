@@ -36,9 +36,9 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     //DASHBORED
     Route::get('/dashbored', [DashboredController::class, 'index'])->name('dashbored');
-
+    
     //Banks
-    Route::get('/banks', [BankController::class, 'index'])->name('banks');
+        Route::get('/banks', [BankController::class, 'index'])->name('banks');
     Route::get('/bank/{id}', [BankController::class, 'show'])->name('bank');
     Route::patch('/banks/{id}', [BankController::class, 'banks_update'])->name('banks_update');
 
@@ -69,5 +69,5 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     //NOTIFICATION
     Route::post('/mark_notification_as_read', [NotificationController::class, 'mark_notification_as_read'])
         ->name('mark_notification_as_read');
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    // Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 });

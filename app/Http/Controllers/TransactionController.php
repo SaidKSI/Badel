@@ -39,34 +39,7 @@ class TransactionController extends Controller
                 break;
         }
 
-        $startDate = $request->input('start_date', Carbon::now()->subDays(30)->format('Y-m-d'));
-        $endDate = $request->input('end_date', Carbon::now()->addDay()->format('Y-m-d'));
-
-
-        // Calculate the difference in days between the start and end dates
-        $dateDifference = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
-
-        $transactions = Transaction::with([
-            'user:id,first_name,last_name',
-            'sendBank:id,Sb_name',
-            'receiverBank:id,Sb_name'
-        ])
-            ->where('status', $status)
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->whereNull('deleted_at')
-            ->orderBy('created_at', 'desc')
-            ->get();
-        $transactionCount = $transactions->count();
-        $banks = Sbank::get();
-        return view($view, [
-            'transactions' => $transactions,
-            'status' => $status,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'date_difference' => $dateDifference,
-            'transactionCount' => $transactionCount,
-            'banks' => $banks
-        ]);
+        return view($view);
     }
 
 

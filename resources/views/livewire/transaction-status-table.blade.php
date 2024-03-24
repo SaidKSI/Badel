@@ -48,7 +48,7 @@
             <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
               {{ $balance }}
 
-              <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;" data-bs-toggle="tooltip"
+              <i id="{{ $transaction->id }}" class="bi bi-info-circle text-primary" style="font-size: 0.8rem;" data-bs-toggle="tooltip"
                 data-bs-placement="top" data-bs-html="true"
                 title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
                 onmouseenter="showTooltip(this)"></i>
@@ -121,33 +121,3 @@
       </table>
     </div>
 </div>
-{{-- <script>
-  function updateTransactionStatus(transaction_id, status, row) {
-  
-  if (
-      confirm(
-          `Are you sure you want to ${status.toLowerCase()} this Transaction?`
-      )
-  ) {
-      $.ajax({
-          url: `/admin/transactions/update/${transaction_id}/${status}`,
-          type: "POST",
-          data: {
-              _token: "{{ csrf_token() }}",
-              _method: "PATCH",
-          },
-          success: function (response) {
-              // Remove the row from the table
-              $(row).remove();
-              console.log(response.message);
-          },
-          error: function (xhr, status, error) {
-              console.error(error);
-              console.error(status);
-              console.error(xhr);
-          },
-      });
-  }
-  }
-
-</script> --}}

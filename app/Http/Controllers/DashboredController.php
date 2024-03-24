@@ -17,43 +17,8 @@ class DashboredController extends Controller
 {
     public function index()
     {
-        // Get the list of banks
-        $banks = Sbank::get();
 
-        // Initialize an empty array to store the totals for each bank
-        $bankTotals = [];
-
-        $holdTransactionCount = Transaction::where('status', 'OnHold')->count();
-        $cancelledTransactionCount = Transaction::where('status', 'Canceled')->count();
-        $pendingTransactionCount = Transaction::where('status', 'Pending')->count();
-        $terminatedTransactionCount = Transaction::where('status', 'Terminated')->count();
-
-
-        $holdPhoneCount = PhoneNumber::where('status', 'OnHold')->count();
-        $cancelledPhoneCount = PhoneNumber::where('status', 'Canceled')->count();
-        $pendingPhoneCount = PhoneNumber::where('status', 'Pending')->count();
-        $terminatedPhoneCount = PhoneNumber::where('status', 'Terminated')->count();
-        // Loop through each bank
-        foreach ($banks as $bank) {
-            // Calculate the sum of amount and amount_after_tax for transactions of this bank
-            $totalAmount = Transaction::where('send_sb_id', $bank->id)->whereNull('deleted_at')->sum('amount');
-            $totalAmountAfterTax = Transaction::where('send_sb_id', $bank->id)->whereNull('deleted_at')->sum('amount_after_tax');
-
-            // Store the calculated totals in an array
-            $bankTotals[$bank->Sb_name] = [
-                'totalAmount' => $totalAmount,
-                'totalAmountAfterTax' => $totalAmountAfterTax,
-            ];
-        }
-
-        $notifications = Auth::user()->notifications;
-        $notificationsCount = Auth::user()->unreadNotifications->count();
-        View::share('notifications', $notifications);
-        View::share('notificationsCount', $notificationsCount);
-        // dd($notifications);
-        // dd($bankTotals);
-        // Pass the calculated totals and the list of banks to the view
-        return view('home', compact('bankTotals', 'banks', 'holdTransactionCount', 'cancelledTransactionCount', 'pendingTransactionCount', 'terminatedTransactionCount', 'holdPhoneCount', 'cancelledPhoneCount', 'pendingPhoneCount', 'terminatedPhoneCount'));
+        return view('home');
     }
     public function users()
     {

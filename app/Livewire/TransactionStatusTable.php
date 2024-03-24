@@ -3,15 +3,15 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Sbank;
 use App\Models\Transaction;
-use Carbon\Carbon;
 
 class TransactionStatusTable extends Component
 {
+
     public $status;
     public $transactions;
-    // public $banks;
+
+    protected $listeners = ['newTransactionAdded' => 'loadTransactions'];
 
     public function mount($status)
     {
@@ -30,10 +30,7 @@ class TransactionStatusTable extends Component
             ->where('status', $this->status)
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Get banks
-        // $this->banks = Sbank::get();
+            ->get(); // Change the number as per your requirement
     }
 
     public function updateTransactionStatus($transaction_id, $status)
@@ -42,6 +39,9 @@ class TransactionStatusTable extends Component
         $transaction = Transaction::findOrFail($transaction_id);
         $transaction->status = $status;
         $transaction->save();
+
+        // Fire an event to notify other components about the new transaction
+        $this->emit('newTransactionAdded');
 
         // Reload transactions
         $this->loadTransactions();
