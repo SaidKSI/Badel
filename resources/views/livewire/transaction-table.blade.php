@@ -1,3 +1,4 @@
+<div wire:poll.30s>
 <style>
   th {
     font-size: 12px;
@@ -10,7 +11,7 @@
     white-space: nowrap;
   }
 </style>
-<div>
+
   <h5 class="card-title"> {{$status}} Transaction</h5>
   <div class="m-2" style="width: 20%">
     <input type="text" wire:model.debounce.50ms="search" name="query" title="Enter search keyword"
