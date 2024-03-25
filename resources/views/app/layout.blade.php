@@ -57,6 +57,7 @@
                 tooltip.hide();
             });
         }
+				
 	</script>
 
 	<!-- Vendor JS Files -->

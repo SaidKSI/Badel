@@ -12,6 +12,7 @@ class TransactionTable extends Component
 
     public $status;
     public $search = '';
+    public $bedel_id; // Added property to hold the bedel_id value
 
     public function updatingSearch()
     {
@@ -23,7 +24,16 @@ class TransactionTable extends Component
         // Update transaction status
         $transaction = Transaction::findOrFail($transaction_id);
         $transaction->status = $status;
+
+        // Check if additional fields need to be updated
+        if ($status === 'Terminated') {
+            $transaction->bedel_id = $this->bedel_id; // Set the bedel_id value
+        }
+
         $transaction->save();
+
+        // Emit an event to close the modal using JavaScript
+        $this->dispatch('closeModal');
     }
 
     public function applySearch()
@@ -47,7 +57,9 @@ class TransactionTable extends Component
             })
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
-            
-        return view('livewire.transaction-table', ['transactions' => $transactions]);
+        $transactionsCount = Transaction::where('status', $this->status)
+            ->whereNull('deleted_at')
+            ->count();
+        return view('livewire.transaction-table', ['transactions' => $transactions, 'transactionsCount' => $transactionsCount]);
     }
 }
