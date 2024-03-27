@@ -16,21 +16,14 @@ class TransactionTable extends Component
 
     #[Url(as: 's')]
     public $search = '';
+    
     public $bedel_id;
 
 
 
 
-    public function generateRandomString()
-    {
-        $randomNumber = mt_rand(10000000, 99999999);
-        $this->bedel_id = 'Tran-' . $randomNumber;
-    }
-
-    public function mount()
-    {
-        $this->generateRandomString();
-    }
+    
+    
     public function updatingSearch()
     {
         $this->resetPage();
@@ -52,8 +45,8 @@ class TransactionTable extends Component
                     'icon' => 'bi bi-check-circle',
                     'status' => 'success'
                 ]);
-                break;
                 $this->dispatch('closeEditModal');
+                break;
 
             case 'Canceled':
                 session()->flash('status', [

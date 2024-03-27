@@ -167,15 +167,13 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
                       <input type="text" id="originalAmount" value="{{ $transaction->amount }}" hidden>
 
                       <div class="row mb-3">
-                        <label for="reBadelId" class="col-sm-3 col-form-label">Re_Badel ID ({{
-                          $transaction->transaction_id }})</label>
+                        <label for="reBadelId" class="col-sm-3 col-form-label">Re_Badel ID </label>
                         <div class="col-sm-8">
                           <input id="reBadelId" type="text" name="reBadelId" class="form-control">
                         </div>
                       </div>
                       <div class="row mb-3">
-                        <label for="reAmount" class="col-sm-3 col-form-label">Re_Amount ({{ $transaction->amount
-                          }})</label>
+                        <label for="reAmount" class="col-sm-3 col-form-label">Re_Amount </label>
                         <div class="col-sm-8">
                           <input id="reAmount" type="text" name="reAmount" class="form-control">
                         </div>
@@ -253,7 +251,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
             <div class="modal fade" id="editModal{{ $transaction->id }}" tabindex="-1"
               aria-labelledby="editModalLabel{{ $transaction->id }}" aria-hidden="true">
 
-              <div wire:ignore.self class="modal-dialog">
+              <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel{{ $transaction->id }}">Terminate Transaction </h5>
@@ -323,7 +321,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Transaction ID</label>
                         <div class="col-sm-8">
-                          <input type="text" wire:model="bedel_id" class="form-control" readonly>
+                          <input type="text" wire:model="bedel_id" class="form-control" >
                         </div>
                       </div>
                       <div class="modal-footer">

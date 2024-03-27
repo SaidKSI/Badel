@@ -1,4 +1,4 @@
-@extends('dashbored')
+@extends('app.layout')
 
 @section('content')
 <div class="card">
