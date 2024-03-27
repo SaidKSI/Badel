@@ -27,19 +27,19 @@
     $phoneItems = [
     (object) [
     'text' => 'Pending',
-    'url' => '/phone/pending',
+    'url' => '/phones/pending',
     ],
     (object) [
     'text' => 'OnHold',
-    'url' => '/phone/onhold',
+    'url' => '/phones/onhold',
     ],
     (object) [
     'text' => 'Terminated',
-    'url' => '/phone/terminated',
+    'url' => '/phones/terminated',
     ],
     (object) [
-    'text' => 'Cancel',
-    'url' => '/phone/cancel',
+    'text' => 'Canceled',
+    'url' => '/phones/canceled',
     ],
     ];
 
@@ -86,7 +86,7 @@
     <li class="nav-item dropdown pe-3" style="list-style: none;">
 
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img class="bx bx-history" class="rounded-circle">
+            <i class="bi  bi-clock-history" class="rounded-circle"></i>
             <span class="d-none d-md-block dropdown-toggle ps-2">History</span>
         </a><!-- End Profile Iamge Icon -->
 
@@ -95,7 +95,7 @@
                 <hr class="dropdown-divider">
             </li>
             <li>
-                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <a class="dropdown-item d-flex align-items-center" href="/admin/history/transactions">
                     <span>Transaction</span>
                 </a>
             </li>
@@ -103,20 +103,51 @@
                 <hr class="dropdown-divider">
             </li>
             <li>
-                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <a class="dropdown-item d-flex align-items-center" href="/admin/history/phones">
                     <span>Phone Number</span>
                 </a>
             </li>
             <li>
                 <hr class="dropdown-divider">
             </li>
-
-
-
         </ul>
     </li>
 
+    <li class="nav-item dropdown pe-3" style="list-style: none;">
 
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <i class="bi  bi-grid" class="rounded-circle"></i>
+            <span class="d-none d-md-block dropdown-toggle ps-2">Other Pages</span>
+        </a><!-- End Profile Iamge Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="/admin/banks">
+                    <span>Banks</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="/admin/fees">
+                    <span>Fees</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="/admin/users">
+                    <span>Users</span>
+                </a>
+            </li>
+
+        </ul>
+    </li>
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
 

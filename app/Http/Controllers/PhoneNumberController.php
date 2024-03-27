@@ -11,7 +11,6 @@ class PhoneNumberController extends Controller
     public function index($status)
     {
         $view = '';
-
         switch ($status) {
             case 'pending':
                 $view = 'phone.pending';
@@ -21,8 +20,8 @@ class PhoneNumberController extends Controller
                 $view = 'phone.terminat';
                 break;
 
-            case 'Canceled':
-                $view = 'phone.cancel';
+            case 'canceled':
+                $view = 'phone.canceled';
                 break;
 
             case 'onhold':
@@ -33,15 +32,9 @@ class PhoneNumberController extends Controller
                 // You can handle other cases or set a default view here
                 break;
         }
-        $phones = PhoneNumber::with(['user:id,first_name,last_name'])
-            ->where('status', $status)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // dd($status . "| " . $view);
 
-        return view($view, [
-            'phones' => $phones,
-            'status' => $status
-        ]);
+        return view($view);
     }
     public function updateStatus($id, $status)
     {

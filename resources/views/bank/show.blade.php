@@ -1,6 +1,6 @@
-@extends('dashbored')
+@extends('app.layout')
 
-@section('inner_content')
+@section('content')
 <section class="section profile">
     <style>
         th {
@@ -36,13 +36,14 @@
                         <h6>
                             Balance :
                             <span class="{{ $balance < 0 ? 'text-danger' : ($balance > 0 ? 'text-success' : '') }}">
-                                {{ $balance }}
+                                {{ $balance }} <small style="font-size: 6px">MRU</small>
                             </span>
                         </h6>
                     </div>
                 </div>
 
             </div>
+
         </div>
     </div>
 
@@ -73,7 +74,7 @@
                     <div class="tab-pane fade show active profile-overview" id="profile-overview">
 
                         <div class="table-responsive">
-                            <table class="table datatable table-striped">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>Bedel ID</th>
@@ -153,6 +154,11 @@
                                     @endif
 
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="11">{{$transactions->links()}}</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
 
@@ -221,7 +227,7 @@
                     </div>
                     <div class="tab-pane fade pt-3" id="profile-settings">
                         <div class="table-responsive">
-                            <table class="table datatable table-striped">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>IN or OUT</th>
@@ -258,6 +264,7 @@
                                             {{ $balance }}
                                             <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
                                                 data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+                                                id="{{ $transaction->id }} "
                                                 title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
                                                 onmouseenter="showTooltip(this)"></i>
                                         </td>
@@ -297,6 +304,11 @@
                                     </tr>
                                     @endif
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="11">{{$transactions->links()}}</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
 

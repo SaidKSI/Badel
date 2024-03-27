@@ -1,6 +1,6 @@
 @extends('dashbored')
 
-@section('inner_content')
+@section('content')
 <section class="section profile">
     <style>
         th {
@@ -100,7 +100,7 @@
                             </form> --}}
 
                             <div class="table-responsive">
-                                <table class="table datatable table-striped">
+                                <table class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>Bedel ID</th>
@@ -136,8 +136,10 @@
                                             <td>{{ $transaction->receiver_full_name }}</td>
                                             <td>{{ $transaction->send_phone }}</td>
                                             <td>{{ $transaction->receiver_phone }}</td>
-                                            <td>{{ $transaction->sendBank->Sb_name }}</td>
-                                            <td>{{ $transaction->receiverBank->Sb_name }}</td>
+                                            <td><a href="{{route('bank',['id'=>$transaction->send_sb_id])}}">{{
+                                                    $transaction->sendBank->Sb_name }} </a> </td>
+                                            <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+                                                    $transaction->receiverBank->Sb_name }}</a> </td>
                                             <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
                                             <td>
                                                 @if($transaction->status == 'Terminated')
@@ -188,7 +190,7 @@
 
                         <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                             <div class="table-responsive">
-                                <table class="table datatable table-striped">
+                                <table class="table table-striped">
                                     <thead>
                                         <tr>
 

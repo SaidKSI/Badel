@@ -2,6 +2,6 @@
 
 @section('content')
 
-@livewire('phone-table', ['status' => 'Pending'] )
+@livewire('phone-table', ['status' => 'Canceled'] )
 
 @endsection

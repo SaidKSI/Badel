@@ -1,6 +1,6 @@
-@extends('dashbored')
+@extends('app.layout')
 
-@section('inner_content')
+@section('content')
 <div class="card">
     <style>
         th {
@@ -19,7 +19,7 @@
         {{-- <livewire:on-hold> --}}
 
             <div class="table-responsive">
-                <table class="table datatable table-striped">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -44,6 +44,11 @@
                         </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="11" style="white-space: normal;">{{$users->links()}}</td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
     </div>

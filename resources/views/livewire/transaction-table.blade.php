@@ -26,7 +26,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
       placeholder="Search by Transaction ID..." wire:keydown.enter="applySearch" class="form-control">
   </div>
   <div class="table-responsive">
-    <table class="table table-striped" id="{{$status}}_transaction" wire:poll.30s>
+    <table class="table table-striped" id="{{$status}}_transaction">
       <thead>
         <tr>
           @switch($status)
@@ -101,8 +101,10 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
               $transaction->transaction_id }}</a></td>
           <td>{{ $transaction->send_phone }}</td>
           <td>{{ $transaction->amount }}</td>
-          <td>{{ $transaction->sendBank->Sb_name }}</td>
-          <td>{{ $transaction->receiverBank->Sb_name }}</td>
+          <td><a href="{{route('bank',['id'=>$transaction->send_sb_id])}}">{{
+              $transaction->sendBank->Sb_name }} </a> </td>
+          <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+              $transaction->receiverBank->Sb_name }}</a> </td>
           <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
           <td class="d-flex">
             <button data-bs-toggle="modal" data-bs-target="#terminate-{{ $transaction->id }}"
@@ -213,7 +215,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
                               
                       </script>
                   </form>
-                  
+
                 </div>
               </div>
             </div>
@@ -234,7 +236,8 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
           <td>{{ $transaction->amount }}</td>
           <td>{{ $transaction->send_phone }}</td>
           <td>{{ $transaction->receiver_phone }}</td>
-          <td>{{ $transaction->receiverBank->Sb_name }}</td>
+          <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+              $transaction->receiverBank->Sb_name }}</a> </td>
           <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
           <td class="d-flex">
             <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Pending')"
@@ -358,7 +361,8 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
           </td>
           <td>{{ $transaction->send_phone }}</td>
           <td>{{ $transaction->receiver_phone }}</td>
-          <td>{{ $transaction->receiverBank->Sb_name }}</td>
+          <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+              $transaction->receiverBank->Sb_name }}</a> </td>
           <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
           <td class="d-flex">
             <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Terminated')"
@@ -380,7 +384,8 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
               $transaction->transaction_id }}</a></td>
           <td>{{ $transaction->amount }}</td>
           <td>{{ $transaction->send_phone }}</td>
-          <td>{{ $transaction->receiverBank->Sb_name }}</td>
+          <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+              $transaction->receiverBank->Sb_name }}</a> </td>
           <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
           {{-- <td>{{ $transaction->updated_at->format('Y-m-d H:i') }}</td> --}}
           <td>{{ $transaction->bedel_id }}</td>
@@ -397,7 +402,8 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
               $transaction->transaction_id }}</a></td>
           <td>{{ $transaction->amount }}</td>
           <td>{{ $transaction->send_phone }}</td>
-          <td>{{ $transaction->receiverBank->Sb_name }}</td>
+          <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+              $transaction->receiverBank->Sb_name }}</a> </td>
           <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
           {{-- <td>
             Transaction ID

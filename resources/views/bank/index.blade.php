@@ -1,6 +1,6 @@
-@extends('dashbored')
+@extends('app.layout')
 
-@section('inner_content')
+@section('content')
 <div>
   <style>
     th {
@@ -19,7 +19,7 @@
       <h5 class="card-title">Banks</h5>
 
       <!-- Table with stripped rows -->
-      <table class="table datatable table-striped">
+      <table class="table table-striped">
         <thead>
           <tr>
             <th scope="col">id</th>
@@ -115,6 +115,11 @@
           </tr>
           @endif
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="11" style="white-space: normal;">{{$banks->links()}}</td>
+          </tr>
+        </tfoot>
       </table>
 
       <!-- End Table with stripped rows -->

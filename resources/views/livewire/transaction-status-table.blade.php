@@ -17,7 +17,7 @@
 
 
     <div class="table-responsive">
-      <table class="table datatable table-striped">
+      <table class="table table-striped">
         <thead>
           <tr>
             <th>Username</th>
@@ -48,8 +48,8 @@
             <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
               {{ $balance }}
 
-              <i id="{{ $transaction->id }}" class="bi bi-info-circle text-primary" style="font-size: 0.8rem;" data-bs-toggle="tooltip"
-                data-bs-placement="top" data-bs-html="true"
+              <i id="{{ $transaction->id }}" class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
+                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
                 title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
                 onmouseenter="showTooltip(this)"></i>
 
@@ -59,8 +59,9 @@
             <td>{{ $transaction->receiver_full_name }}</td>
             <td>{{ $transaction->send_phone }}</td>
             <td>{{ $transaction->receiver_phone }}</td>
-            <td>{{ $transaction->sendBank->Sb_name }}</td>
-            <td>{{ $transaction->receiverBank->Sb_name }}</td>
+            <td><a href="{{route('bank',['id'=>$bank->id])}}">{{ $bank->id}}</a></td>
+            <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+                $transaction->receiverBank->Sb_name }}</a> </td>
             <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
             @switch($status)
             @case('Pending')

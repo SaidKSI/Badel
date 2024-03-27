@@ -1,6 +1,6 @@
-@extends('dashbored')
+@extends('app.layout')
 
-@section('inner_content')
+@section('content')
 <div class="card">
     <style>
         th {
@@ -10,8 +10,8 @@
         }
 
         td {
-            font-size: 12px;
             white-space: nowrap;
+            font-size: 12px;
         }
     </style>
     <div class="card">
@@ -32,10 +32,9 @@
             <div class="tab-content pt-2" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="card-body">
-                        <h5 class="card-title">Transaction History <span>| {{$transactionCount}} in {{$dateDifference}}
-                                Days</span></h5>
+                        <h5 class="card-title">Transaction History <span> {{$dateDifference}} Days</span></h5>
 
-                        <form action="">
+                        <form action="" class="m-2">
                             <div class="row pb-4">
                                 <div class="col">
                                     <div class="col-sm-10">
@@ -99,8 +98,6 @@
                                     </div>
                                 </div>
 
-
-
                             </div>
                             <div class="d-flex  gap-3">
                                 <div class="">
@@ -110,11 +107,9 @@
                                     <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
-
                         </form>
-
                         <div class="table-responsive">
-                            <table class="table datatable table-striped">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>Username</th>
@@ -145,7 +140,8 @@
                                         @endphp
                                         <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
                                             {{ $balance }}
-                                            <i class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
+                                            <i id="{{$transaction->transaction_id}}"
+                                                class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
                                                 data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
                                                 title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
                                                 onmouseenter="showTooltip(this)"></i>
@@ -154,8 +150,10 @@
                                         <td>{{ $transaction->receiver_full_name }}</td>
                                         <td>{{ $transaction->send_phone }}</td>
                                         <td>{{ $transaction->receiver_phone }}</td>
-                                        <td>{{ $transaction->sendBank->Sb_name }}</td>
-                                        <td>{{ $transaction->receiverBank->Sb_name }}</td>
+                                        <td><a href="{{route('bank',['id'=>$transaction->send_sb_id])}}">{{
+                                                $transaction->sendBank->Sb_name }} </a> </td>
+                                        <td><a href="{{route('bank',['id'=>$transaction->receiver_sb_id])}}">{{
+                                                $transaction->receiverBank->Sb_name }}</a> </td>
                                         <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
                                         <td>
                                             @if($transaction->status == 'Terminated')
@@ -170,15 +168,19 @@
                                             </small>
                                             @endif
                                         </td>
-
                                     </tr>
                                     @endforeach
                                     @else
                                     <tr>
-                                        <td colspan="8" class="text-center">No transactions found.</td>
+                                        <td colspan="11" class="text-center">No transactions found.</td>
                                     </tr>
                                     @endif
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="11" style="white-space: normal;">{{$transactions->links()}}</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -186,8 +188,7 @@
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Reports <span>| {{$transactionCount}} in {{$dateDifference}}
-                                    Days</span></h5>
+                            <h5 class="card-title">Reports <span>|{{$dateDifference}} Days</span></h5>
                             <div id="reportsChart"></div>
 
 
@@ -274,7 +275,6 @@
     </div>
 
 </div>
-
 
 
 @endsection

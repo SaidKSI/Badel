@@ -11,7 +11,7 @@ class BankController extends Controller
 {
     public function index()
     {
-        $banks = Sbank::get();
+        $banks = Sbank::paginate(25);
 
         return view('bank.index', ['banks' => $banks]);
     }
@@ -24,8 +24,13 @@ class BankController extends Controller
             ->whereNull('deleted_at')
             ->count();
 
-        $totalAmount = Transaction::where('send_sb_id', $id)->whereNull('deleted_at')->sum('amount');
-        $totalAmountAfterTax = Transaction::where('send_sb_id', $id)->whereNull('deleted_at')->sum('amount_after_tax');
+        $totalAmount = Transaction::where('send_sb_id', $id)->where('status', 'Terminated')
+            ->whereNull('deleted_at')
+            ->sum('amount');
+        $totalAmountAfterTax = Transaction::where('send_sb_id', $id)->where('status', 'Terminated')
+            ->whereNull('deleted_at')
+            ->sum('amount_after_tax');
+
         $transactions = Transaction::with([
             'user:id,first_name,last_name',
             'sendBank:id,Sb_name',
@@ -34,9 +39,11 @@ class BankController extends Controller
             ->where('send_sb_id', $bank->id)
             ->orWhere('receiver_sb_id', $bank->id)
             ->whereNull('deleted_at')
-            ->get();
+            ->paginate(25);
         return view('bank.show', compact('bank', 'totalAmount', 'totalAmountAfterTax', 'transactionCount', 'transactions'));
     }
+
+
     public function banks_update(Request $request, $id)
     {
         // dd($request, $id);

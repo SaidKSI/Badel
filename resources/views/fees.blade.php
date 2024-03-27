@@ -1,6 +1,6 @@
 @extends('dashbored')
 
-@section('inner_content')
+@section('content')
 <div class="card">
   <style>
     th {
@@ -19,7 +19,7 @@
     {{-- <livewire:on-hold> --}}
 
       <div class="table-responsive">
-        <table class="table datatable table-striped">
+        <table class="table table-striped">
           <thead>
             <tr>
               <th>ID</th>

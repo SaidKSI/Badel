@@ -1,6 +1,6 @@
 @extends('dashbored')
 
-@section('inner_content')
+@section('content')
 <div class="card">
   <style>
     th {

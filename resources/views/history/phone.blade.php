@@ -1,6 +1,6 @@
-@extends('dashbored')
+@extends('app.layout')
 
-@section('inner_content')
+@section('content')
 <div class="card">
   <style>
     th {
@@ -60,7 +60,7 @@
       </form>
 
       <div class="table-responsive">
-        <table class="table datatable table-striped">
+        <table class="table table-striped">
           <thead>
             <tr>
               <th>Username</th>
@@ -97,6 +97,11 @@
             </tr>
             @endif
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="11"> {{$phones->links()}}</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
   </div>

@@ -31,8 +31,8 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     // Log Out
     Route::get('/logout', [AdminController::class, 'logout'])->name('logout');
     // HISTORY
-    Route::get('/transaction/history', [DashboredController::class, 'transaction_history'])->name('transaction.history');
-    Route::get('/phone/history', [DashboredController::class, 'phone_history'])->name('phone.history');
+    Route::get('/history/transactions', [DashboredController::class, 'transaction_history'])->name('transaction.history');
+    Route::get('/history/phones', [DashboredController::class, 'phone_history'])->name('phone.history');
 
     //DASHBORED
     Route::get('/dashbored', [DashboredController::class, 'index'])->name('dashbored');

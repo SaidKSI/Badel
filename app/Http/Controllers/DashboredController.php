@@ -9,12 +9,11 @@ use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
 
 class DashboredController extends Controller
 {
+
     public function index()
     {
         return view('home');
@@ -66,7 +65,7 @@ class DashboredController extends Controller
             'receiverBank:id,Sb_name'
         ])
             ->whereNull('deleted_at')
-            ->whereBetween('created_at', [$startDate, $endDate]);
+            ->paginate(25);
 
         // Apply status filter
         if ($status && in_array($status, ['terminated', 'canceled'])) {
@@ -76,13 +75,11 @@ class DashboredController extends Controller
             $transactions->whereIn('status', ['terminated', 'canceled']);
         }
 
-        $transactionCount = $transactions->count();
 
-        $transactions = $transactions->get();
+
         $banks = Sbank::get();
         return view('history.transaction', [
             'transactions' => $transactions,
-            'transactionCount' => $transactionCount,
             'start_date' => $startDate,
             'end_date' => $endDate,
             'dateDifference' => $dateDifference,
@@ -101,17 +98,14 @@ class DashboredController extends Controller
         $status = $request->input('status');
 
         $phones = PhoneNumber::with(['user:id,first_name,last_name'])
-            ->whereBetween('created_at', [$startDate, $endDate]);
-
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc')->paginate(25);
         if ($status && in_array($status, ['terminated', 'canceled'])) {
             $phones->where('status', $status);
         } else {
             // Default status filter if no specific status is selected
             $phones->whereIn('status', ['terminated', 'canceled']);
         }
-
-        $phones = $phones->orderBy('created_at', 'desc')->get();
-
         return view('history.phone', [
             'phones' => $phones,
             'start_date' => $startDate,
