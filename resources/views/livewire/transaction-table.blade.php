@@ -2,6 +2,11 @@
 $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30 seconds for others
 @endphp
 <div wire:poll.{{ $pollInterval }}s>
+  @if (session('status'))
+  <x-alert :message="session('status')['message']" :status="session('status')['status']"
+    :icon="session('status')['icon']" />
+  @endif
+
   <style>
     th {
       font-size: 12px;
@@ -15,7 +20,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
     }
   </style>
 
-  <h5 class="card-title"> {{$status}} Transaction <span>{{$transactionsCount}}</span></h5>
+  <h5 class="card-title"> {{$status}} Transaction </h5>
   <div class="m-2" style="width: 20%">
     <input type="text" wire:model.debounce.50ms="search" name="query" title="Enter search keyword"
       placeholder="Search by Transaction ID..." wire:keydown.enter="applySearch" class="form-control">
@@ -100,7 +105,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
           <td>{{ $transaction->receiverBank->Sb_name }}</td>
           <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
           <td class="d-flex">
-            <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Accepted')"
+            <button data-bs-toggle="modal" data-bs-target="#terminate-{{ $transaction->id }}"
               class="btn btn-sm btn-success me-2" title="Accepted">
               <i class="bi bi-check-circle"></i>
             </button>
@@ -108,11 +113,116 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
               class="btn btn-sm btn-warning me-2" title="OnHold">
               <i class="bi bi-clock-fill"></i>
             </button>
-            <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Canceled')"
-              class="btn btn-sm btn-danger" title="Canceled">
+            <button wire:confirm="Are you sure you want to delete this Transaction?"
+              wire:click="updateTransactionStatus({{ $transaction->id }}, 'Canceled')" class="btn btn-sm btn-danger"
+              title="Canceled">
               <i class="bi bi-exclamation-octagon"></i>
             </button>
+            <div class="modal fade" id="terminate-{{ $transaction->id }}" tabindex="-1"
+              aria-labelledby="terminateModalLabel-{{ $transaction->id }}" aria-hidden="true">
+              <div wire:ignore.self class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="terminateModalLabel-{{ $transaction->id }}">Validation Process</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form wire:submit.prevent="updateTransactionStatus({{ $transaction->id }}, 'Accepted')"
+                    id="updateForm{{ $transaction->id }}">
+                    <div class="modal-body">
+                      <div class="row mb-3">
+                        <label for="inputMin" class="col-sm-3 col-form-label">Username</label>
+                        <div class="col-sm-8">
+                          <input type="text" name="send_account" class="form-control"
+                            value="{{ $transaction->user->first_name . " " .
+                          $transaction->user->last_name }}" readonly>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputMin" class="col-sm-3 col-form-label">Sender Phone</label>
+                        <div class="col-sm-8">
+                          <input type="text" name="send_account" class="form-control"
+                            value="{{$transaction->send_phone}}" readonly>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputMin" class="col-sm-3 col-form-label">Receiver Bank</label>
+                        <div class="col-sm-8">
+                          <input type="text" name="send_account" class="form-control"
+                            value="{{$transaction->receiverBank->Sb_name}}" readonly>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputMin" class="col-sm-3 col-form-label">Badel ID</label>
+                        <div class="col-sm-8">
+                          @php
+                          $maskedId = str_repeat('x', max(0, strlen($transaction->transaction_id) - 4)) .
+                          substr($transaction->transaction_id, -4);
+                          @endphp
+                          <input type="text" class="form-control" value="{{ $maskedId }}" readonly>
+                        </div>
+                      </div>
+                      <input type="text" id="originalTransactionId" value="{{ $transaction->transaction_id }}" hidden>
+                      <input type="text" id="originalAmount" value="{{ $transaction->amount }}" hidden>
+
+                      <div class="row mb-3">
+                        <label for="reBadelId" class="col-sm-3 col-form-label">Re_Badel ID ({{
+                          $transaction->transaction_id }})</label>
+                        <div class="col-sm-8">
+                          <input id="reBadelId" type="text" name="reBadelId" class="form-control">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="reAmount" class="col-sm-3 col-form-label">Re_Amount ({{ $transaction->amount
+                          }})</label>
+                        <div class="col-sm-8">
+                          <input id="reAmount" type="text" name="reAmount" class="form-control">
+                        </div>
+                      </div>
+
+                      <div class="modal-footer justify-content-center">
+                        <button type="submit" id="validateBtn" class="btn btn-primary" disabled>Validate</button>
+                        <div id="error_message"
+                          class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show"
+                          role="alert">Conditions not met. Please enter correct Re_Badel ID and Re_Amount.
+                        </div>
+                      </div>
+
+                      <script>
+                        $(document).ready(function() {
+                                  $('#reBadelId, #reAmount').on('input', function() {
+                                      var originalTransactionId = $('#originalTransactionId').val();
+                                      var originalAmount = $('#originalAmount').val();
+                                      var reBadelId = $('#reBadelId').val();
+                                      var reAmount = $('#reAmount').val();
+                                      
+                                      // console.log("Original Transaction ID:", originalTransactionId);
+                                      // console.log("Original Amount:", originalAmount);
+                                      // console.log("Re_Badel ID:", reBadelId);
+                                      // console.log("Re_Amount:", reAmount);
+
+                                      if (reBadelId == originalTransactionId && reAmount == originalAmount) {
+                                          // console.log("Conditions met. Enabling Validate button.");
+                                          $('#validateBtn').prop('disabled', false);
+                                          $('#error_message').hide();
+                                      } else {
+                                          // console.log("Conditions not met. Disabling Validate button.");
+                                          $('#validateBtn').prop('disabled', true);
+                                      }
+                                  });
+                              });
+                              
+                      </script>
+                  </form>
+                  
+                </div>
+              </div>
+            </div>
           </td>
+          <script>
+            window.addEventListener('closeTerminateModal', event => {
+     $("#terminate-{{ $transaction->id }}").modal('hide');                
+      })
+          </script>
           @break
           @case('Accepted')
           <td><a href="{{route('user',['id'=>$transaction->user_id])}}">{{ $transaction->user->first_name . "
@@ -140,29 +250,28 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
             <div class="modal fade" id="editModal{{ $transaction->id }}" tabindex="-1"
               aria-labelledby="editModalLabel{{ $transaction->id }}" aria-hidden="true">
 
-              <div class="modal-dialog">
+              <div wire:ignore.self class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel{{ $transaction->id }}">Transaction {{
-                      $transaction->transaction_id }}</h5>
+                    <h5 class="modal-title" id="editModalLabel{{ $transaction->id }}">Terminate Transaction </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <form wire:submit.prevent="updateTransactionStatus({{ $transaction->id }}, 'Terminated')"
-                    id="updateForm{{ $transaction->id }}">
+                    id="updateForm{{ $transaction->id }}" P>
                     <div class="modal-body">
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Username</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control"
                             value="{{ $transaction->user->first_name . " " .
-                          $transaction->user->last_name }}" disabled>
+                          $transaction->user->last_name }}" readonly>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Bedel ID</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control"
-                            value="{{$transaction->transaction_id}}" disabled>
+                            value="{{$transaction->transaction_id}}" readonly>
                         </div>
                       </div>
 
@@ -170,64 +279,63 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
                         <label for="inputMin" class="col-sm-3 col-form-label">Sender Phone</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control"
-                            value="{{$transaction->send_phone}}" disabled>
+                            value="{{$transaction->send_phone}}" readonly>
                         </div>
                       </div>
                       <div class="row mb-3">
-                        <label for="inputMin" class="col-sm-3 col-form-label">Sender Phone</label>
+                        <label for="inputMin" class="col-sm-3 col-form-label">Receiver Phone</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control"
-                            value="{{$transaction->receiver_phone}}" disabled>
+                            value="{{$transaction->receiver_phone}}" readonly>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Receiver Name</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control"
-                            value="{{$transaction->receiver_full_name}}" disabled>
+                            value="{{$transaction->receiver_full_name}}" readonly>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Receiver Bank</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control"
-                            value="{{$transaction->receiverBank->Sb_name}}" disabled>
+                            value="{{$transaction->receiverBank->Sb_name}}" readonly>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Amount</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control" value="{{$transaction->amount}}"
-                            disabled>
+                            readonly>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Amount after Tax</label>
                         <div class="col-sm-8">
                           <input type="text" name="send_account" class="form-control"
-                            value="{{$transaction->amount_after_tax}}" disabled>
+                            value="{{$transaction->amount_after_tax}}" readonly>
                         </div>
                       </div>
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Transaction ID</label>
                         <div class="col-sm-8">
-                          <input type="text" wire:model="bedel_id" class="form-control" value="">
+                          <input type="text" wire:model="bedel_id" class="form-control" readonly>
                         </div>
                       </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save
-                        changes</button>
-                    </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save
+                          changes</button>
+                      </div>
                   </form>
                 </div>
               </div>
             </div>
             <script>
-              window.livewire.on('closeModal', (transaction_id ) => {
-             $('#editPost' + transaction_id).modal('hide');
-            })
+              window.addEventListener('closeEditModal', event => {
+       $("#editModal{{ $transaction->id }}").modal('hide');                
+        })
             </script>
           </td>
           @break
@@ -257,8 +365,9 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
               class="btn btn-sm btn-success me-2">
               <i class="bi bi-check-circle"></i>
             </button>
-            <button wire:click="updateTransactionStatus({{ $transaction->id }}, 'Canceled')"
-              class="btn btn-sm btn-danger" title="Canceled">
+            <button wire:confirm="Are you sure you want to delete this Transaction?"
+              wire:click="updateTransactionStatus({{ $transaction->id }}, 'Canceled')" class="btn btn-sm btn-danger"
+              title="Canceled">
               <i class="bi bi-exclamation-octagon"></i>
             </button>
           </td>
@@ -312,7 +421,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
       <tfoot>
         <tr>
           <td colspan="11">
-            <x-pagination :items="$transactions" />
+            {{$transactions->links()}}
           </td>
         </tr>
       </tfoot>
@@ -320,3 +429,12 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
   </div>
 
 </div>
+
+<script>
+  document.querySelectorAll('.btn').forEach(function(button) {
+      button.addEventListener('click', function() {
+          navigator.vibrate([50]); // Vibrate for 50 milliseconds
+          this.style.transform = 'scale(1.2)'; // Make the button slightly smaller
+      });
+  });
+</script>

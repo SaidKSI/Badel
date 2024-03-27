@@ -1,7 +1,7 @@
 <div>
-    @extends('dashbored')
+    @extends('app.layout')
 
-    @section('inner_content')
+    @section('content')
 
     <div class="row">
 
@@ -21,7 +21,7 @@
                     <div class="row g-5">
                         <div class="col-md-6">
                             <label for="sendBank" class="form-label">Send Bank</label>
-                            <select class="form-select" id="sendBank" aria-label="Send Bank" name="send_sb_id">
+                            <select class="form-select" id="sendBank" aria-label="Send Bank" name="send_sb_id" disabled>
                                 <option selected>Choose...</option>
                                 @foreach($banks as $bank)
                                 <option value="{{ $bank->id }}" {{ $transaction->send_sb_id == $bank->id ?
@@ -56,7 +56,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="status" class="form-label">Status:</label>
-                            <select class="form-select" id="status" aria-label="Status" name="status">
+                            <select class="form-select" id="status" aria-label="Status" name="status" disabled>
                                 <option value="pending" {{ $transaction->status === 'pending' ? 'selected' : ''
                                     }}>Pending</option>
                                 <option value="terminated" {{ $transaction->status === 'terminated' ? 'selected' : ''
@@ -69,7 +69,8 @@
                         </div>
                         <div class="col-md-6">
                             <label for="sendBank" class="form-label">Reciever Bank</label>
-                            <select class="form-select" id="sendBank" aria-label="Send Bank" name="receiver_sb_id">
+                            <select class="form-select" id="sendBank" aria-label="Send Bank" name="receiver_sb_id"
+                                disabled>
                                 <option selected>Choose...</option>
                                 @foreach($banks as $bank)
                                 <option value="{{ $bank->id }}" {{ $transaction->receiver_sb_id == $bank->id ?

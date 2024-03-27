@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Transaction;
+use Livewire\Attributes\Rule;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -11,9 +13,24 @@ class TransactionTable extends Component
     use WithPagination;
 
     public $status;
-    public $search = '';
-    public $bedel_id; // Added property to hold the bedel_id value
 
+    #[Url(as: 's')]
+    public $search = '';
+    public $bedel_id;
+
+
+
+
+    public function generateRandomString()
+    {
+        $randomNumber = mt_rand(10000000, 99999999);
+        $this->bedel_id = 'Tran-' . $randomNumber;
+    }
+
+    public function mount()
+    {
+        $this->generateRandomString();
+    }
     public function updatingSearch()
     {
         $this->resetPage();
@@ -21,20 +38,46 @@ class TransactionTable extends Component
 
     public function updateTransactionStatus($transaction_id, $status)
     {
+        sleep(1);
         // Update transaction status
         $transaction = Transaction::findOrFail($transaction_id);
         $transaction->status = $status;
 
-        // Check if additional fields need to be updated
-        if ($status === 'Terminated') {
-            $transaction->bedel_id = $this->bedel_id; // Set the bedel_id value
+        // Switch based on status
+        switch ($status) {
+            case 'Terminated':
+                $transaction->bedel_id = $this->bedel_id; // Set the bedel_id value
+                session()->flash('status', [
+                    'message' => 'Transaction terminated',
+                    'icon' => 'bi bi-check-circle',
+                    'status' => 'success'
+                ]);
+                break;
+                $this->dispatch('closeEditModal');
+
+            case 'Canceled':
+                session()->flash('status', [
+                    'message' => 'Transaction Canceled',
+                    'icon' => 'bi bi-exclamation-octagon',
+                    'status' => 'danger'
+                ]);
+                break;
+
+            case 'Accepted':
+                session()->flash('status', [
+                    'message' => 'Transaction Accepted',
+                    'icon' => 'bi bi-check-circle',
+                    'status' => 'success'
+                ]);
+                $this->dispatch('closeTerminateModal');
+                break;
         }
 
         $transaction->save();
 
         // Emit an event to close the modal using JavaScript
-        $this->dispatch('closeModal');
     }
+
 
     public function applySearch()
     {
@@ -57,9 +100,7 @@ class TransactionTable extends Component
             })
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
-        $transactionsCount = Transaction::where('status', $this->status)
-            ->whereNull('deleted_at')
-            ->count();
-        return view('livewire.transaction-table', ['transactions' => $transactions, 'transactionsCount' => $transactionsCount]);
+
+        return view('livewire.transaction-table', ['transactions' => $transactions]);
     }
 }
