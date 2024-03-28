@@ -72,6 +72,13 @@
                 <div class="tab-content pt-2">
 
                     <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                        <form action="" id="searchForm">
+                            <div class="p-2" style="width: 25%">
+                                <input type="text" name="transaction_id" id="transaction_id"
+                                    title="Enter search keyword" placeholder="Search by Transaction ID..."
+                                    value="{{ old('transaction_id',request('transaction_id'))}}" class="form-control">
+                            </div>
+                        </form>
 
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -134,9 +141,9 @@
                                                 H:i')}}
                                             </small>
                                             @elseif($transaction->status == 'Pending')
-                                            <span class="badge bg-dark"><i class="bi bi-folder me-1"></i>
+                                            <span class="badge bg-dark"><i class="bi bi-clock-history me-1"></i>
                                                 Pending</span>
-                                            <small>at {{
+                                            <small>from {{
                                                 $transaction->updated_at->format('Y-m-d
                                                 H:i')}}
                                             </small>
@@ -164,16 +171,15 @@
 
                     </div>
 
-                    <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-                        <div class="table-responsive">
+                    <div class="tab-pane fade profile-edit" id="profile-edit">
 
-                            <h5 class="card-title">Transaction Reports<span> {{$bank->Sb_name}} bank</span></h5>
+                        <h5 class="card-title">Transaction Reports<span> {{$bank->Sb_name}} bank</span></h5>
 
-                            <!-- Line Chart -->
-                            <div id="reportsChart"></div>
+                        <!-- Line Chart -->
+                        <div id="reportsChart"></div>
 
-                            <script>
-                                document.addEventListener("DOMContentLoaded", () => {
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
                                     new ApexCharts(document.querySelector("#reportsChart"), {
                                         series: [{
                                             name: 'Amount',
@@ -181,6 +187,9 @@
                                         }, {
                                             name: 'Amount After Tax',
                                             data: {!! json_encode($transactions->pluck('amount_after_tax')->toArray()) !!}
+                                        }, {
+                                            name: 'Balance',
+                                            data: {!! json_encode($transactions->pluck('balance')->toArray()) !!}
                                         }],
                                         chart: {
                                             height: 350,
@@ -192,7 +201,7 @@
                                         markers: {
                                             size: 4
                                         },
-                                        colors: ['#4154f1', '#2eca6a'],
+                                        colors: ['#4154f1', '#d62222', '#2eca7a'],
                                         fill: {
                                             type: "gradient",
                                             gradient: {
@@ -220,13 +229,19 @@
                                         }
                                     }).render();
                                 });
-                            </script>
+                        </script>
 
-                        </div>
+
 
                     </div>
-                    <div class="tab-pane fade pt-3" id="profile-settings">
+                    <div class="tab-pane fade" id="profile-settings">
+                        <div class="p-2" style="width: 25%">
+                            <input type="text" name="transaction_id" title="Enter search keyword"
+                                placeholder="Search by Transaction ID..."
+                                value="{{ old('transaction_id',request('transaction_id'))}}" class="form-control">
+                        </div>
                         <div class="table-responsive">
+
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -324,3 +339,16 @@
     </div>
 </section>
 @endsection
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var form = document.getElementById('searchForm');
+        var input = document.getElementById('transaction_id');
+
+        input.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default form submission
+                form.submit(); // Submit the form
+            }
+        });
+    });
+</script>

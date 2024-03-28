@@ -10,9 +10,20 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(25);
+        $usersQuery = User::query();
+
+        if ($request->user_name) {
+            $usersQuery->where(function ($query) use ($request) {
+                $query->where('first_name', 'like', '%' . $request->user_name . '%')
+                    ->orWhere('last_name', 'like', '%' . $request->user_name . '%');
+            });
+        }
+
+        // Paginate the filtered users
+        $users = $usersQuery->orderby('created_at', 'desc')->paginate(25);
+
         return view('user.index', ['users' => $users]);
     }
     public function show($id)

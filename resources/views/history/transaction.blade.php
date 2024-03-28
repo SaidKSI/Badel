@@ -40,14 +40,14 @@
                                     <div class="col-sm-10">
                                         <label for="start_date">Start Date</label>
                                         <input type="date" class="form-control" id="start_date" name="start_date"
-                                            value="{{ old('start_date', $start_date) }}">
+                                            value="{{ old('start_date',request('start_date')) }}">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="col-sm-10">
                                         <label for="end_date">End Date</label>
                                         <input type="date" class="form-control" id="end_date" name="end_date"
-                                            value="{{ old('end_date', $end_date) }}">
+                                            value="{{ old('end_date',request('end_date'))}}">
                                     </div>
                                 </div>
 
@@ -83,6 +83,7 @@
                                     </div>
                                 </div>
                                 <div class="col">
+
                                     <div class="col-sm-10">
                                         <label for="receiver">Receiver Bank</label>
                                         <select class="form-select" id="receiver" name="receiver_sb_id">
@@ -99,7 +100,15 @@
                                 </div>
 
                             </div>
-                            <div class="d-flex  gap-3">
+
+                            <div class="d-flex gap-3">
+                                <div class="pt-2">
+                                    <input type="text" name="transaction_id" title="Enter search keyword"
+                                        placeholder="Search by Transaction ID..."
+                                        value="{{ old('transaction_id',request('transaction_id'))}}"
+                                        class="form-control">
+
+                                </div>
                                 <div class="">
                                     <button class="btn btn-primary">Search</button>
                                 </div>
@@ -107,6 +116,7 @@
                                     <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
+
                         </form>
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -114,7 +124,8 @@
                                     <tr>
                                         <th>Username</th>
                                         <th>Bedel ID</th>
-                                        <th>Balance</th>
+                                        <th>Amount</th>
+                                        <th>Amount After Tax</th>
                                         <th>Sender</th>
                                         <th>Receiver</th>
                                         <th>Sender Phone</th>
@@ -135,16 +146,12 @@
                                         <td><a
                                                 href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
                                                 $transaction->transaction_id }}</a></td>
-                                        @php
-                                        $balance = $transaction->amount - $transaction->amount_after_tax
-                                        @endphp
+
                                         <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
-                                            {{ $balance }}
-                                            <i id="{{$transaction->transaction_id}}"
-                                                class="bi bi-info-circle text-primary" style="font-size: 0.8rem;"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
-                                                title="Amount: {{ $transaction->amount }}  || Amount after tax: {{ $transaction->amount_after_tax }}"
-                                                onmouseenter="showTooltip(this)"></i>
+                                            {{ $transaction->amount}}
+                                        </td>
+                                        <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
+                                            {{ $transaction->amount_after_tax}}
                                         </td>
                                         <td>{{ $transaction->send_full_name }}</td>
                                         <td>{{ $transaction->receiver_full_name }}</td>
@@ -178,7 +185,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="11" style="white-space: normal;">{{$transactions->links()}}</td>
+                                        <td colspan="11" style="white-space: normal;">{{
+                                            $transactions->appends(request()->query())->links() }}</td>
                                     </tr>
                                 </tfoot>
                             </table>

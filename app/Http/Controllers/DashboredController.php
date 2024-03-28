@@ -51,65 +51,75 @@ class DashboredController extends Controller
 
     public function transaction_history(Request $request)
     {
-        $startDate = $request->input('start_date', Carbon::now()->subDays(30)->format('Y-m-d'));
-        $endDate = $request->input('end_date', Carbon::now()->addDay()->format('Y-m-d'));
-
-        // Calculate the difference in days between the start and end dates
-        $dateDifference = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
-
+        $dateDifference = Carbon::parse($request->start_date)->diffInDays(Carbon::parse($request->end_date));
         $status = $request->input('status');
+        $sendBankId = $request->input('send_sb_id');
+        $receiverBankId = $request->input('receiver_sb_id');
+        $transactionId = $request->input('transaction_id');
 
-        $transactions = Transaction::with([
+        $query = Transaction::with([
             'user:id,first_name,last_name',
             'sendBank:id,Sb_name',
             'receiverBank:id,Sb_name'
-        ])
-            ->whereNull('deleted_at')
-            ->paginate(25);
+        ])->whereNull('deleted_at');
 
-        // Apply status filter
-        if ($status && in_array($status, ['terminated', 'canceled'])) {
-            $transactions->where('status', $status);
-        } else {
-            // Default status filter if no specific status is selected
-            $transactions->whereIn('status', ['terminated', 'canceled']);
+        if ($request->start_date && $request->end_date) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
         }
 
+        if ($status && in_array($status, ['terminated', 'canceled'])) {
+            $query->where('status', $status);
+        } else {
+            $query->whereIn('status', ['terminated', 'canceled']);
+        }
 
+        if ($sendBankId) {
+            $query->where('send_sb_id', $sendBankId);
+        }
 
+        if ($receiverBankId) {
+            $query->where('receiver_sb_id', $receiverBankId);
+        }
+
+        if ($transactionId) {
+            $query->where('transaction_id', $transactionId);
+        }
+
+        $transactions = $query->orderBy('updated_at', 'desc')->paginate(25);
         $banks = Sbank::get();
+
         return view('history.transaction', [
             'transactions' => $transactions,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
             'dateDifference' => $dateDifference,
             'banks' => $banks
         ]);
     }
 
+
+
     public function phone_history(Request $request)
     {
-        $startDate = $request->input('start_date', Carbon::now()->subDays(30)->format('Y-m-d'));
-        $endDate = $request->input('end_date', Carbon::now()->addDay()->format('Y-m-d'));
-
-        // Calculate the difference in days between the start and end dates
-        $dateDifference = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
+        $dateDifference = Carbon::parse($request->start_date)->diffInDays(Carbon::parse($request->end_date));
 
         $status = $request->input('status');
 
-        $phones = PhoneNumber::with(['user:id,first_name,last_name'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->orderBy('created_at', 'desc')->paginate(25);
-        if ($status && in_array($status, ['terminated', 'canceled'])) {
-            $phones->where('status', $status);
-        } else {
-            // Default status filter if no specific status is selected
-            $phones->whereIn('status', ['terminated', 'canceled']);
+        $query = PhoneNumber::with(['user:id,first_name,last_name']);
+
+        if ($request->start_date && $request->end_date) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
         }
+        if ($request->phone_number) {
+            $query->where('phone_number', $request->phone_number);
+        }
+        if ($status && in_array($status, ['terminated', 'canceled'])) {
+            $query->where('status', $status);
+        } else {
+            $query->whereIn('status', ['terminated', 'canceled']);
+        }
+        $phones = $query->orderBy('updated_at', 'desc')->paginate(25);
+
         return view('history.phone', [
             'phones' => $phones,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
             'dateDifference' => $dateDifference
         ]);
     }

@@ -321,7 +321,7 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
                       <div class="row mb-3">
                         <label for="inputMin" class="col-sm-3 col-form-label">Transaction ID</label>
                         <div class="col-sm-8">
-                          <input type="text" wire:model="bedel_id" class="form-control" >
+                          <input type="text" wire:model="bedel_id" class="form-control">
                         </div>
                       </div>
                       <div class="modal-footer">
@@ -424,9 +424,8 @@ $pollInterval = $status === 'Pending' ? 1200 : 30; // 20 minutes for Pending, 30
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="11">
-            {{$transactions->links()}}
-          </td>
+          <td colspan="11" style="white-space: normal;">{{
+            $transactions->appends(request()->query())->links() }}</td>
         </tr>
       </tfoot>
     </table>

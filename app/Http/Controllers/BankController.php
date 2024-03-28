@@ -15,19 +15,22 @@ class BankController extends Controller
 
         return view('bank.index', ['banks' => $banks]);
     }
-    public function show($id)
+    public function show(Request $request, $id)
     {
-
         $bank = Sbank::findOrFail($id);
+
         $transactionCount = Transaction::where('send_sb_id', $bank->id)
             ->orWhere('receiver_sb_id', $bank->id)
             ->whereNull('deleted_at')
             ->count();
 
-        $totalAmount = Transaction::where('send_sb_id', $id)->where('status', 'Terminated')
+        $totalAmount = Transaction::where('send_sb_id', $id)
+            ->where('status', 'Terminated')
             ->whereNull('deleted_at')
             ->sum('amount');
-        $totalAmountAfterTax = Transaction::where('send_sb_id', $id)->where('status', 'Terminated')
+
+        $totalAmountAfterTax = Transaction::where('send_sb_id', $id)
+            ->where('status', 'Terminated')
             ->whereNull('deleted_at')
             ->sum('amount_after_tax');
 
@@ -36,12 +39,21 @@ class BankController extends Controller
             'sendBank:id,Sb_name',
             'receiverBank:id,Sb_name'
         ])
-            ->where('send_sb_id', $bank->id)
-            ->orWhere('receiver_sb_id', $bank->id)
-            ->whereNull('deleted_at')
-            ->paginate(25);
-        return view('bank.show', compact('bank', 'totalAmount', 'totalAmountAfterTax', 'transactionCount', 'transactions'));
+            ->where(function ($query) use ($bank) {
+                $query->where('send_sb_id', $bank->id)
+                    ->orWhere('receiver_sb_id', $bank->id);
+            })
+            ->whereNull('deleted_at');
+
+        if ($request->transaction_id) {
+            $transactions->where('transaction_id', $request->transaction_id);
+        }
+
+        $transactions = $transactions->orderBy('updated_at', 'desc')->paginate(25);
+        $balance = $totalAmount - $totalAmountAfterTax ;
+        return view('bank.show', compact('bank', 'totalAmount', 'totalAmountAfterTax', 'transactionCount', 'transactions','balance'));
     }
+
 
 
     public function banks_update(Request $request, $id)

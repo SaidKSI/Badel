@@ -81,6 +81,8 @@ class TransactionTable extends Component
 
     public function render()
     {
+        // $this->dispatch('closeEditModal');
+        // $this->dispatch('closeTerminateModal');
         $transactions = Transaction::with([
             'user:id,first_name,last_name',
             'sendBank:id,Sb_name',

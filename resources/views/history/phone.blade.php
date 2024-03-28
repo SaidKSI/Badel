@@ -17,28 +17,34 @@
   <div class="card-body">
     <h5 class="card-title">Phone History |{{$dateDifference}} Days</h5>
     {{-- <livewire:on-hold> --}}
-      <form action="">
+      <form action="" class="m-2">
         <div class="row pb-4">
-          <div class="col-md-3">
+          <div class="col mt-4">
+            <div class="col-sm-10">
+              <input type="text" name="phone_number" title="Enter search keyword" placeholder="Search by Phone Number"
+                value="{{ old('phone_number',request('phone_number'))}}" class="form-control">
+            </div>
+          </div>
+          <div class="col">
             <div class="col-sm-10">
               <label for="start_date">Start Date</label>
               <input type="date" class="form-control" id="start_date" name="start_date"
-                value="{{ old('start_date', $start_date) }}">
+                value="{{ old('start_date',request('start_date')) }}">
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col">
             <div class="col-sm-10">
               <label for="end_date">End Date</label>
               <input type="date" class="form-control" id="end_date" name="end_date"
-                value="{{ old('end_date', $end_date) }}">
+                value="{{ old('end_date',request('end_date'))}}">
             </div>
           </div>
 
-          <div class="col-md-3">
+          <div class="col">
             <div class="col-sm-10">
               <label for="status">Status</label>
               <select class="form-select" id="status" name="status">
-                <option value="" {{ request('status')=='' ? 'selected' : '' }}>Status</option>
+                <option value="">Status</option>
                 <option value="terminated" {{ request('status')=='terminated' ? 'selected' : '' }}>
                   Terminated
                 </option>
@@ -48,15 +54,12 @@
               </select>
             </div>
           </div>
-
-
-          <div class="col-md-1">
-            <button class="btn btn-primary">Search</button>
-          </div>
-          <div class="col-md-1">
-            <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
-          </div>
         </div>
+        <div class="d-flex gap-3">
+          <button class="btn btn-primary">Search</button>
+          <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+        </div>
+
       </form>
 
       <div class="table-responsive">
@@ -99,7 +102,8 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="11"> {{$phones->links()}}</td>
+              <td colspan="11" style="white-space: normal;">{{
+                $phones->appends(request()->query())->links() }}</td>
             </tr>
           </tfoot>
         </table>
