@@ -147,10 +147,10 @@
                                                 href="{{ route('transaction', ['transaction_id' => $transaction->transaction_id]) }}">{{
                                                 $transaction->transaction_id }}</a></td>
 
-                                        <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
+                                        <td class="text-success">
                                             {{ $transaction->amount}}
                                         </td>
-                                        <td class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
+                                        <td class="text-danger">
                                             {{ $transaction->amount_after_tax}}
                                         </td>
                                         <td>{{ $transaction->send_full_name }}</td>
